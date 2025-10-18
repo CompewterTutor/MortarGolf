@@ -4,7 +4,7 @@
  * Utility functions used throughout the mod.
  */
 
-import { JsPlayer } from './player';
+import { GolfPlayer } from './player';
 
 /**
  * Create a localized message with variable arguments
@@ -45,7 +45,7 @@ export function Lerp(a: number, b: number, t: number): number {
 export async function GetPlayersInRange(point: mod.Vector, distance: number): Promise<mod.Player[]> {
     let closePlayers: mod.Player[] = [];
     
-    JsPlayer.playerInstances.forEach(player => {
+    GolfPlayer.playerInstances.forEach((player: mod.Player) => {
         if (mod.GetSoldierState(player, mod.SoldierStateBool.IsAlive)) {
             let pos = mod.GetSoldierState(player, mod.SoldierStateVector.GetPosition);
             let dist = mod.DistanceBetween(pos, point);
@@ -65,7 +65,7 @@ export function GetPlayersOnTeam(team: mod.Team): mod.Player[] {
     let teamPlayers: mod.Player[] = [];
     let teamID = mod.GetObjId(team);
     
-    JsPlayer.playerInstances.forEach(player => {
+    GolfPlayer.playerInstances.forEach((player: mod.Player) => {
         if (mod.GetObjId(mod.GetTeam(player)) == teamID) {
             teamPlayers.push(player);
         }
@@ -81,9 +81,9 @@ export function GetLivingPlayersOnTeam(team: mod.Team): mod.Player[] {
     let teamPlayers: mod.Player[] = [];
     let teamID = mod.GetObjId(team);
     
-    JsPlayer.playerInstances.forEach(player => {
-        let jsPlayer = JsPlayer.get(player);
-        if (!jsPlayer) return;
+    GolfPlayer.playerInstances.forEach((player: mod.Player) => {
+        let golfPlayer = GolfPlayer.get(player);
+        if (!golfPlayer) return;
         
         if (mod.GetObjId(mod.GetTeam(player)) == teamID 
             && mod.GetSoldierState(player, mod.SoldierStateBool.IsAlive)) {
@@ -217,7 +217,7 @@ export function CountPlayersOnTeam(team: mod.Team): number {
 export function GetAllAlivePlayers(): mod.Player[] {
     let alivePlayers: mod.Player[] = [];
     
-    JsPlayer.playerInstances.forEach(player => {
+    GolfPlayer.playerInstances.forEach((player: mod.Player) => {
         if (IsPlayerAlive(player)) {
             alivePlayers.push(player);
         }
@@ -516,3 +516,93 @@ export function GroupPlayersByTeam(players: mod.Player[]): Map<number, mod.Playe
     
     return grouped;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// FOURSOME & GROUP HELPERS
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Calculate the time elapsed since hole start for a foursome
+ */
+export function GetFoursomeHoleTime(holeStartTime: number): number {
+    const currentTime = Date.now() / 1000;
+    return currentTime - holeStartTime;
+}
+
+/**
+ * Format hole time for display (MM:SS)
+ */
+export function FormatHoleTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+
+/**
+ * Check if all players in an array are valid
+ */
+export function AreAllPlayersValid(players: mod.Player[]): boolean {
+    return players.every(p => mod.GetObjId(p) > -1);
+}
+
+/**
+ * Remove invalid players from an array
+ */
+export function RemoveInvalidPlayers(players: mod.Player[]): mod.Player[] {
+    return players.filter(p => mod.GetObjId(p) > -1);
+}
+
+/**
+ * Get the best score among a group of players
+ */
+export function GetBestScoreInGroup(players: mod.Player[]): number {
+    if (players.length === 0) return 0;
+    
+    let bestScore = Infinity;
+    players.forEach(player => {
+        // This would reference a GolfPlayer method
+        // For now, return a placeholder
+        // TODO: Implement when score tracking is added
+    });
+    
+    return bestScore;
+}
+
+/**
+ * Calculate average score for a group
+ */
+export function GetAverageScoreInGroup(players: mod.Player[]): number {
+    if (players.length === 0) return 0;
+    
+    let totalScore = 0;
+    players.forEach(player => {
+        // TODO: Implement when score tracking is added
+    });
+    
+    return totalScore / players.length;
+}
+
+/**
+ * Check if a hole number is valid
+ */
+export function IsValidHole(holeNumber: number, totalHoles: number): boolean {
+    return holeNumber >= 1 && holeNumber <= totalHoles;
+}
+
+/**
+ * Get next hole number
+ */
+export function GetNextHole(currentHole: number, totalHoles: number): number {
+    if (currentHole >= totalHoles) {
+        return -1; // No more holes
+    }
+    return currentHole + 1;
+}
+
+/**
+ * Check if this is the final hole
+ */
+export function IsFinalHole(holeNumber: number, totalHoles: number): boolean {
+    return holeNumber === totalHoles;
+}
+

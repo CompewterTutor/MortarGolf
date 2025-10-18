@@ -1,0 +1,54 @@
+{
+    "_default_language_": "_en_",
+    
+    "gameStarting": "MortarGolf - Get ready to tee off!",
+    "welcomeMessage": "Welcome to MortarGolf! Combine golf and combat to victory!",
+    
+    "assignedToGroup": "You've been assigned to {}",
+    "matchmakingQueue": "In matchmaking queue... Position: {}",
+    "formingGroup": "Forming your foursome...",
+    "groupFormed": "Foursome formed! {} players ready",
+    "waitingForPlayers": "Waiting for more players...",
+    
+    "holeStarting": "Hole {} - Par {}",
+    "holeComplete": "Hole {} Complete!",
+    "nextHole": "Proceeding to Hole {}...",
+    "finalHole": "Final Hole!",
+    
+    "yourTurn": "Your turn to shoot!",
+    "greatShot": "Great Shot!",
+    "onTheGreen": "On the green!",
+    "holedOut": "Hole out!",
+    
+    "ace": "ACE! Hole in one!",
+    "eagle": "Eagle! 2 under par!",
+    "birdie": "Birdie! 1 under par!",
+    "par": "Par",
+    "bogey": "Bogey - 1 over par",
+    "doubleBogey": "Double Bogey - 2 over par",
+    
+    "outOfBounds": "Out of Bounds! +1 Stroke Penalty",
+    "inTheRough": "In the rough",
+    "inTheSand": "In the bunker!",
+    
+    "moneyEarned": "You earned ${}",
+    "shopOpening": "Shop opening in {} seconds",
+    "shopOpen": "Shop is now open!",
+    "shopClosed": "Shop has closed",
+    "notEnoughMoney": "Not enough money",
+    "purchaseComplete": "Purchase complete!",
+    
+    "playerDowned": "{} was downed!",
+    "revivedByCaddy": "Revived by your caddy!",
+    "caddyDown": "Your caddy is down!",
+    
+    "roundComplete": "Round complete!",
+    "gameOver": "Game Over - Final Scores",
+    "winner": "{} wins the tournament!",
+    "finalScore": "Your score: {} ({} strokes)",
+    
+    "teamRed": "Red Team",
+    "teamBlue": "Blue Team", 
+    "teamGreen": "Green Team",
+    "teamYellow": "Yellow Team"
+}

@@ -5,6 +5,61 @@ All notable changes to the MortarGolf project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.4] - 2025-10-17
+
+### Added
+- **Foursome Class**: Complete group management system for up to 4 players
+  - Add/remove players (2 golfers + 2 caddies max)
+  - Team color assignment (Red, Blue, Green, Yellow)
+  - Hole progression tracking and completion detection
+  - Automatic caddy-golfer pairing within groups
+  - Group disbanding and cleanup
+  - Static helper methods for finding and managing foursomes
+  - Support for up to 4 simultaneous foursomes (32 players)
+
+- **MatchmakingQueue Class**: Intelligent player queue and group formation
+  - Queue management with player preferences (Golfer/Caddy role)
+  - Wait time tracking and prioritization
+  - Automatic foursome formation (balanced 2+2 groups)
+  - Auto-assignment of long-wait players
+  - Solo player placement in existing foursomes
+  - Queue statistics (size, roles, average wait time)
+  - Immediate foursome formation on demand
+
+- **Team Color System**:
+  - TeamColor enum (Red, Blue, Green, Yellow)
+  - Automatic team assignment via SDK
+  - Team color arrays for UI display
+  - Team name helpers ("Red Team", etc.)
+
+- **Localization Strings**: Added comprehensive message strings
+  - Matchmaking messages (queue, group formation)
+  - Hole progression messages (starting, complete, next hole)
+  - Shot result messages (ace, birdie, par, etc.)
+  - Shop system messages
+  - Combat messages (downed, revived)
+  - Round completion messages
+
+- **Helper Functions**: Added group management utilities
+  - `GetFoursomeHoleTime()`: Calculate elapsed time
+  - `FormatHoleTime()`: Format time as MM:SS
+  - `AreAllPlayersValid()`: Validate player arrays
+  - `RemoveInvalidPlayers()`: Clean invalid players
+  - `IsValidHole()`, `GetNextHole()`, `IsFinalHole()`: Hole navigation
+  - Group scoring helpers (best score, average score)
+
+### Changed
+- Updated `helpers.ts` to use `GolfPlayer` instead of `JsPlayer`
+- Build configuration now includes `foursome.ts` and `matchmaking.ts`
+- All player instances now properly typed with GolfPlayer class
+
+### Technical
+- Phase 2.2 complete (Team & Group Management)
+- Multi-foursome tracking system ready
+- Player role assignment fully functional
+- Foundation ready for hole progression implementation
+- Next: Phase 2.3 (State Management System)
+
 ## [0.0.3] - 2025-10-17
 
 ### Added

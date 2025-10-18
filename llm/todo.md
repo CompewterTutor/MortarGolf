@@ -1,8 +1,8 @@
 # MortarGolf Development Todo List
 
 **Project**: MortarGolf - Golf with Mortars Game Mode for BF6 Portal  
-**Version**: 0.0.3  
-**Last Updated**: October 17, 2025 (Late Evening)  
+**Version**: 0.0.4
+**Last Updated**: October 17, 2025
 **Status**: Phase 2.1 Complete ✅ - Beginning Phase 2.2
 
 ---

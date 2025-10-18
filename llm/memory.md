@@ -3,85 +3,86 @@
 **Project**: MortarGolf - Golf with Mortars Game Mode  
 **Started**: October 17, 2025  
 **Current Phase**: Phase 2 - Core Game Systems (In Progress)  
-**Status**: Phase 2.1 Complete ✅ - Player Management System
+**Status**: Phase 2.2 Complete ✅ - Team & Group Management System
 
 ---
 
 ## Current State
 
 ### What We're Working On
-- **Development Tooling**: Added automated version bump script
-  - ✅ Created Python version bump automation
-  - ✅ Updated dev guidelines with git repo info
-  - **Next**: Continue with Phase 2.2 - Team & Group Management
+- **Phase 2.2 Complete** ✅: Team & Group Management System
+  - ✅ Foursome class with full group management
+  - ✅ Matchmaking queue system
+  - ✅ Team color assignment
+  - ✅ Multi-foursome tracking
+  - **Next**: Phase 2.3 - State Management System
 
-### Recently Completed (October 17, 2025 - Late Evening Session Continued)
+### Recently Completed (October 17, 2025 - Late Evening Session)
 
-**Development Tooling Improvements** ✅
+**Version 0.0.4 - Team & Group Management System** ✅
 
-1. ✅ **Automated Version Bump Script**:
-   - Created `tools/bump_version.py` for automated version management
-   - Automatically updates:
-     - `package.json` version field
-     - `src/constants.ts` VERSION constant
-     - `README.md` version badge and footer
-     - `llm/todo.md` version and date
-     - `CHANGELOG.md` with new version template
-   - Supports major/minor/patch semver bumping
-   - Works with SDK's bundled Python or any Python 3.x
+1. ✅ **Foursome Class** (`src/foursome.ts`):
+   - Complete group management for up to 4 players (2 golfers + 2 caddies)
+   - Methods: `addGolfer()`, `addCaddy()`, `removePlayer()`, `getTotalPlayers()`
+   - Group state: `isFull()`, `hasRoom()`, `areAllPlayersComplete()`
+   - Hole progression: `startHole()`, `completeHole()`, `hasCompletedAllHoles()`
+   - Player pairing: `pairPlayersWithCaddies()` for golfer-caddy relationships
+   - Automatic team assignment via SDK `mod.SetTeam()`
+   - TeamColor enum (Red, Blue, Green, Yellow) with color arrays
+   - Team names and display helpers
+   - Static methods for finding/managing foursomes:
+     - `createFoursome()`: Auto-assign next available color
+     - `findAvailableFoursome()`: Find groups with space
+     - `getFoursomeByPlayer()`: Lookup player's group
+     - `getFoursomesByHole()`: Get all groups on specific hole
+     - `getActiveFoursomes()`: Get all active groups
+     - `clearAll()`: Reset all foursomes
 
-2. ✅ **Dev Guidelines Enhancement**:
-   - Added git repository root clarification
-   - Documented that git root is MortarGolf folder, not parent
-   - Added version bump script usage instructions
-   - Included SDK Python path examples
-   - Documented post-bump workflow
+2. ✅ **MatchmakingQueue Class** (`src/matchmaking.ts`):
+   - Player queue with role preferences (Golfer/Caddy)
+   - Queue management: `addPlayer()`, `removePlayer()`, `clearQueue()`
+   - Wait time tracking and player position in queue
+   - Automatic foursome formation:
+     - `tryFormCompleteGroups()`: Create balanced 2+2 groups
+     - `handleLongWaitPlayers()`: Auto-assign after 30s wait
+     - `autoAssignSoloPlayers()`: Fill existing groups
+   - `processQueue()`: Periodic processing from update loop
+   - `formImmediateFoursome()`: Create group on demand
+   - Queue statistics: total players, roles, average wait time
 
-**Version 0.0.3 - Player Management System** ✅
+3. ✅ **Team Color System**:
+   - TeamColor enum integrated with SDK team system
+   - Automatic team assignment when joining foursome
+   - Color arrays for UI rendering (COLOR_TEAM_RED, etc.)
+   - Team name helpers ("Red Team", "Blue Team", etc.)
+   - Support for up to 4 simultaneous teams (32 players max)
 
-1. ✅ **GolfPlayer Class Refactor**:
-   - Refactored `JsPlayer` → `GolfPlayer` implementing full interface
-   - Added all golf-specific properties:
-     - Role system (golfer/caddy/spectator)
-     - Team ID tracking
-     - Caddy/golfer bidirectional references
-     - Current hole state (hole number, phase, shots, lie)
-     - Scoring arrays (hole scores, cumulative stats)
-     - Money tracking
-     - Shot data (position, distance to pin, selected club)
+4. ✅ **Localization Strings** (`MortarGolf.strings.json`):
+   - Matchmaking messages (queue status, group formation)
+   - Hole progression (starting, complete, next hole, final hole)
+   - Shot results (ace, eagle, birdie, par, bogey, great shot)
+   - Terrain messages (rough, sand, out of bounds)
+   - Shop system (opening, open, closed, purchases)
+   - Combat (player downed, revived, caddy down)
+   - Round completion (game over, winner, final score)
+   - Team names for all four colors
 
-2. ✅ **Player Management Methods**:
-   - `setRole()`: Assign and switch player roles
-   - `assignCaddy()` / `assignGolfer()`: Bidirectional pairing
-   - `unpair()`: Break caddy-golfer relationships
-   - `startHole()`: Initialize new hole state
-   - `completeHole()`: Record score and update stats
-   - `takeShot()`: Track shot count
-   - `setLie()`: Update surface type and switch to putting
-   - `getTotalScore()`: Get cumulative score
-   - `getScoreRelativeToPar()`: Calculate score vs par
-   - `getHoleScore()`: Retrieve specific hole data
-   - `hasCaddy()`: Check pairing status
-   - `isOnGreen()`: Check putting phase eligibility
+5. ✅ **Helper Functions** (added to `src/helpers.ts`):
+   - `GetFoursomeHoleTime()`: Calculate elapsed time since hole start
+   - `FormatHoleTime()`: Format seconds as MM:SS
+   - `AreAllPlayersValid()`, `RemoveInvalidPlayers()`: Player validation
+   - `IsValidHole()`, `GetNextHole()`, `IsFinalHole()`: Hole navigation
+   - Group scoring helpers (best score, average - placeholders for now)
 
-3. ✅ **Static Helper Methods**:
-   - `getAllGolfers()`: Filter all golfer instances
-   - `getAllCaddies()`: Filter all caddy instances
-   - `getAll()`: Get all GolfPlayer instances
+6. ✅ **Build System Updates**:
+   - Added `foursome.ts` and `matchmaking.ts` to build config
+   - Fixed all GolfPlayer references in helpers.ts
+   - All new files compile without errors
 
-4. ✅ **State Management Enhancement**:
-   - Added golf-specific state variables:
-     - `currentHoleNumber`, `roundStartTime`, `holeStartTime`
-     - Player role arrays: `golfers[]`, `caddies[]`, `spectators[]`
-   - Created `Foursome` interface with tracking
-   - Added state setters for all new variables
-   - Helper functions for player array management
-   - Foursome management functions
+7. ✅ **Version Bump**: 0.0.3 → 0.0.4 using automated script
+8. ✅ **Documentation Updates**: CHANGELOG.md, memory.md, todo.md
 
-5. ✅ **Version Bump**: 0.0.2 → 0.0.3
-6. ✅ **Documentation Updates**: CHANGELOG.md, memory.md
-
-### Previous Completed Sessions
+### Previous Session - Version 0.0.3
 
 **Version 0.0.2 - Type System & Constants** (Oct 17, Evening)
 - Complete type definitions (15+ types and interfaces)

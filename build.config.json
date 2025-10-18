@@ -12,6 +12,8 @@
     "helpers.ts",
     "ui.ts",
     "player.ts",
+    "foursome.ts",
+    "matchmaking.ts",
     "messages.ts",
     "gameflow.ts",
     "updates.ts",
