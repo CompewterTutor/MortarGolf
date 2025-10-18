@@ -9,6 +9,7 @@ Develop a dev guidelines file with best practicer guidelines and other tips for 
 
 ### TODO Generation
 ***This prompt will generate a granular todo list for your llm to keep track of progress with throughout development that is based on the information in your brief.md so fill that out first then run this prompt***
+Using the guidelines in .llm/dev_guidelines.md and the documentation provided in the index.ts and index.d.ts files inside that directory, generate a granular todo list for developing our game mod for battlefield 6 using the SDK in typescript. Add to the dev guidelines that we will be developing alongside that todo list and make sure to organize it in clear phases with small, concise subtasks and take into account the common_checklist.md we created based on the other sdk first party portal gamemodes. Add to the dev guidelines that we will be keeping track of project progress in .llm/memory.md as well as the changelog.md. Create a readme based on the information in the project brief to give the repository a landing spot. Create any useful helper functions that may be used in other game modes, other projects, or more than once in this project in src/helpers.ts. Organize the code based on the dev guidelines and the build_system.md file found in the DOCS folder.
 
 ### Basic Development
 ***This is a generic development prompt essentially bootstrapping each separate task. Cater this to your liking per task.***

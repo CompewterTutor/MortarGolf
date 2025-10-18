@@ -7,8 +7,10 @@
 ## 📋 Basic Information
 
 **Game Mode Name:** MortarGolf
-**Version:** [0.0.1]
-**Author:** [CompewterTutor]
+**Version:** 0.0.1
+**Author:** CompewterTutor
+**Source Code:** https://github.com/compewtertutor/mortargolf
+
 **Last Updated:** [10/17/25]
 
 **Development Status:**
