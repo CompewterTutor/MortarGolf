@@ -2,6 +2,65 @@
 
 ## Development Workflow
 
+### Git Repository Setup
+
+**IMPORTANT**: The git repository root is the **MortarGolf folder itself**, not the parent PortalSDKBF6 directory.
+
+When running git commands, always ensure you're in the MortarGolf directory:
+```bash
+cd /d/PortalSDKBF6/mods/MortarGolf
+git status
+git add -A
+git commit -m "your message"
+```
+
+The repository structure:
+```
+MortarGolf/              # <- GIT ROOT
+├── .git/                # Git repository data
+├── src/                 # Source code
+├── llm/                 # Documentation
+├── tools/               # Build and utility scripts
+├── package.json
+└── README.md
+```
+
+### Version Bumping
+
+**Use the automated version bump script instead of manual updates.**
+
+The `tools/bump_version.py` script automatically updates version numbers across all project files:
+
+```bash
+# From the MortarGolf directory
+python tools/bump_version.py patch   # 0.0.3 -> 0.0.4
+python tools/bump_version.py minor   # 0.0.3 -> 0.1.0
+python tools/bump_version.py major   # 0.0.3 -> 1.0.0
+```
+
+The script updates:
+- `package.json` - Version field
+- `src/constants.ts` - VERSION constant
+- `README.md` - Version badge and footer
+- `llm/todo.md` - Version and last updated date
+- `CHANGELOG.md` - Adds new version section template
+
+After running the script:
+1. Fill in the CHANGELOG.md section with your changes
+2. Update llm/memory.md with development progress
+3. Review all changes
+4. Commit with appropriate message
+
+**Using the SDK's Python**:
+The script can be run with the SDK's bundled Python interpreter:
+```bash
+# Windows
+../../python/python.exe tools/bump_version.py patch
+
+# The script is also compatible with any Python 3.x installation
+python tools/bump_version.py patch
+```
+
 ### Core Development Process
 This project follows a structured development workflow using several tracking files:
 
@@ -255,7 +314,84 @@ export function OnPlayerLeaveGame(player: mod.Player): void {
 
 ### Message System
 
+#### Localization Strings File
+
+**IMPORTANT**: All user-facing text strings must be defined in `MortarGolf.strings.json` for localization support.
+
+The strings file should be placed at the root of the mod folder alongside the compiled TypeScript file.
+
+**File Structure** (`MortarGolf.strings.json`):
+```json
+{
+    "_default_language_": "_en_",
+    "welcomeMessage": "Welcome to MortarGolf!",
+    "holeStarting": "Hole {} - Par {}",
+    "greatShot": "Great Shot!",
+    "playerScored": "{} scored a {}!",
+    "moneyEarned": "You earned ${}",
+    "shopOpen": "Shop opening in {} seconds",
+    "ace": "ACE!",
+    "eagle": "Eagle!",
+    "birdie": "Birdie!",
+    "par": "Par",
+    "bogey": "Bogey",
+    "outOfBounds": "Out of Bounds! +1 Stroke Penalty"
+}
+```
+
+**Best Practices**:
+- Use descriptive, clear key names (camelCase or snake_case)
+- Include `{}` placeholders for dynamic values (player names, numbers, etc.)
+- Group related strings with common prefixes (e.g., `shop_`, `score_`, `ui_`)
+- Always include `"_default_language_": "_en_"` at the top
+- Add comments in separate documentation, not in JSON
+
+**Usage in Code**:
+```typescript
+// Simple string
+mod.DisplayHighlightedWorldLogMessage(
+    mod.Message("welcomeMessage")
+);
+
+// String with one parameter
+mod.DisplayNotificationMessage(
+    mod.Message("moneyEarned", 250),
+    player
+);
+
+// String with multiple parameters
+mod.DisplayHighlightedWorldLogMessage(
+    mod.Message("holeStarting", 1, 4)
+);
+
+// Player name in string
+mod.DisplayNotificationMessage(
+    mod.Message("playerScored", mod.GetPlayerName(player), "Birdie"),
+    team
+);
+```
+
+**Helper Function for Messages**:
+```typescript
+// Create a helper function in helpers.ts
+export function MakeMessage(key: string, ...args: any[]): mod.Message {
+    switch (args.length) {
+        case 0: return mod.Message(key);
+        case 1: return mod.Message(key, args[0]);
+        case 2: return mod.Message(key, args[0], args[1]);
+        case 3: return mod.Message(key, args[0], args[1], args[2]);
+        default: return mod.Message(key);
+    }
+}
+```
+
+**File Deployment**:
+- Place `MortarGolf.strings.json` in the mod folder root
+- Upload alongside the compiled `.ts` file when deploying
+- File is automatically loaded by the SDK
+
 #### Using Messages
+
 ```typescript
 // Create localized messages
 function MakeMessage(key: string, ...args: any[]): mod.Message {
@@ -269,19 +405,19 @@ function MakeMessage(key: string, ...args: any[]): mod.Message {
 
 // Display to all players
 mod.DisplayHighlightedWorldLogMessage(
-    MakeMessage("Round started!")
+    MakeMessage("roundStarted")
 );
 
 // Display to specific player
 mod.DisplayNotificationMessage(
-    MakeMessage("You scored!"),
+    MakeMessage("youScored"),
     player
 );
 
 // Display to team
 let team = mod.GetTeam(player);
 mod.DisplayNotificationMessage(
-    MakeMessage("Team scored!"),
+    MakeMessage("teamScored"),
     team
 );
 ```

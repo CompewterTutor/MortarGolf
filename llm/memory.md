@@ -10,16 +10,32 @@
 ## Current State
 
 ### What We're Working On
-- **COMPLETED Phase 2.1**: Player Management System fully implemented!
-  - ✅ GolfPlayer class with comprehensive golf properties
-  - ✅ Player initialization and cleanup
-  - ✅ Caddy-golfer pairing system
-  - ✅ Statistics tracking and scoring methods
-  - ✅ Role management (Golfer, Caddy, Spectator)
-  - ✅ State management with player tracking arrays
-  - **Next**: Phase 2.2 - Team & Group Management (Foursome formation)
+- **Development Tooling**: Added automated version bump script
+  - ✅ Created Python version bump automation
+  - ✅ Updated dev guidelines with git repo info
+  - **Next**: Continue with Phase 2.2 - Team & Group Management
 
-### Recently Completed (October 17, 2025 - Late Evening Session)
+### Recently Completed (October 17, 2025 - Late Evening Session Continued)
+
+**Development Tooling Improvements** ✅
+
+1. ✅ **Automated Version Bump Script**:
+   - Created `tools/bump_version.py` for automated version management
+   - Automatically updates:
+     - `package.json` version field
+     - `src/constants.ts` VERSION constant
+     - `README.md` version badge and footer
+     - `llm/todo.md` version and date
+     - `CHANGELOG.md` with new version template
+   - Supports major/minor/patch semver bumping
+   - Works with SDK's bundled Python or any Python 3.x
+
+2. ✅ **Dev Guidelines Enhancement**:
+   - Added git repository root clarification
+   - Documented that git root is MortarGolf folder, not parent
+   - Added version bump script usage instructions
+   - Included SDK Python path examples
+   - Documented post-bump workflow
 
 **Version 0.0.3 - Player Management System** ✅
 
@@ -156,9 +172,56 @@ src/
 **Future**: Could use QR codes for easier mobile entry  
 **Date**: October 17, 2025
 
+#### Development Tooling: Automated Version Bumping
+**Decision**: Created Python script for automated version management  
+**Reason**: Manual version updates across 5+ files is error-prone and tedious  
+**Benefits**: Single command updates all version references consistently  
+**Implementation**: `tools/bump_version.py` with semver support (major/minor/patch)  
+**Files Updated**: package.json, constants.ts, README.md, todo.md, CHANGELOG.md  
+**Date**: October 17, 2025
+
+#### Git Repository Root
+**Decision**: MortarGolf folder is the git repository root  
+**Reason**: Allows independent version control for the mod  
+**Impact**: All git commands must be run from MortarGolf directory  
+**Documentation**: Added to dev_guidelines.md with examples  
+**Date**: October 17, 2025
+
+#### Localization Strings File
+**Decision**: All user-facing text must be in `MortarGolf.strings.json`  
+**Reason**: Follow SDK best practices for localization support  
+**Format**: JSON file with string keys and placeholder support  
+**Location**: Root of mod folder alongside compiled TypeScript  
+**Documentation**: Added comprehensive section to dev_guidelines.md  
+**Date**: October 17, 2025
+
 ---
 
 ## Technical Notes
+
+### Development Tools
+
+#### Version Bump Script
+Location: `tools/bump_version.py`
+
+Automates version updates across project:
+- Updates package.json version field
+- Updates constants.ts VERSION constant array
+- Updates README.md badges and footer
+- Updates todo.md version and date
+- Creates CHANGELOG.md template for new version
+
+Usage:
+```bash
+python tools/bump_version.py patch  # 0.0.3 -> 0.0.4
+python tools/bump_version.py minor  # 0.0.3 -> 0.1.0
+python tools/bump_version.py major  # 0.0.3 -> 1.0.0
+```
+
+Can be run with SDK's bundled Python:
+```bash
+../../python/python.exe tools/bump_version.py patch
+```
 
 ### SDK Limitations Discovered
 1. **No Networking**: Can't persist data across matches directly
@@ -223,6 +286,8 @@ None at this time.
 3. Update memory.md with any important decisions
 4. Keep CHANGELOG.md current
 5. Test with multiple player counts early and often
+6. **All user-facing text goes in MortarGolf.strings.json** - Never hardcode strings in TypeScript
+7. Use the version bump script for all version updates
 
 ---
 

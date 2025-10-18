@@ -20,3 +20,7 @@ Continue development on our project using the guidelines in llm/dev_guidelines.m
 ### Cleanup Documentation
 ***Run this prompt when your todo and memory documentation for your LLM are getting long and taking up a lot of context. I typically try to keep my todo and memory files under 5-600 lines.
 
+## Prompts I had to make along the way:
+v 0.0.3
+
+make a note in the dev guidelines that the root of the project's git repository is the specific mod folder so that when you run git commands it should be in the MortarGolf directory. Also create a python script that runs using the SDK's bundled version of python to do the version bump for us and make a note in the dev guidelines that version bumping will use that script. write a proper commit msg, update the todo and the memory, and i'll commit and move to the next item on the todo list in the next chat
