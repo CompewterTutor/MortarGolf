@@ -84,20 +84,24 @@ Get the lowest score
 
 
 ### Gameplay Phases
-#### Phase 1: [Pro Shop/Tee Time assignment]
-- **Duration:** [Until teetime comes]
+
+#### Phase 1: Pro Shop/Tee Time assignment
+
+- **Duration:** Until teetime comes
 - **Description:** [Players can checkout leaderboards or signup for tee times and get assigned caddy/group]
 - **Player Actions:** [view leaderboard, go to driving range, watch from gallery other players]
 
-#### Phase 2: [TeeTime]
-- **Duration:** [Players have 30 seconds to get from their carts to the first tee]
+#### Phase 2: TeeTime
+
+- **Duration:** Players have 30 seconds to get from their carts to the first tee
 - **Description:** Drive to the tee, view teams
-- **Player Actions:** [Get in jeep, drive to tee, select "club"]
+- **Player Actions:** Get in jeep, drive to tee, select "club"
 
 #### Phase 3: Tee-Off
-- **Duration:** Players are given a 10 second countdown to the start of the round once they all reach the teebox.
-- **Description:** Players are placed in the "shooting" state on the teebox and can adjust the tee to make their shot as good as possible both for position and for ease of getting their via their jeep.
-- **Player Actions:** adjust shot launch angle, direction, and spin. Then once they start their "backswing" they attempt to shoot via a meter where they have to click once to start the shot, once to determine the power of the shot and once for the followthrough which will determine hook/slice amount.
+
+- **Duration:** Players are given a 10 second countdown to the start of the round once they all reach the tee box.
+- **Description:** Players are placed in the "shooting" state on the tee box and can adjust the tee to make their shot as good as possible both for position and for ease of getting their via their jeep.
+- **Player Actions:** adjust shot launch angle, direction, and spin. Then once they start their "backswing" they attempt to shoot via a meter where they have to click once to start the shot, once to determine the power of the shot and once for the follow through which will determine hook/slice amount.
 
 
 
@@ -106,6 +110,7 @@ Get the lowest score
 ## 🏆 Win Conditions
 
 ### Victory Conditions
+
 - [ ] **Score-based:** [Description - e.g., "First team to 100 points wins"]
 - [ ] **Time-based:** [Description - e.g., "Highest score when time expires"]
 - [ ] **Objective-based:** [Description - e.g., "Complete all objectives first"]
@@ -113,6 +118,7 @@ Get the lowest score
 - [ ] **Other:** [Custom win condition]
 
 ### Point System
+
 | Action | Points Awarded |
 |--------|----------------|
 | [Action 1] | [Points] |
@@ -122,31 +128,36 @@ Get the lowest score
 | [Action 5] | [Points] |
 
 ### Match Duration
+
 - **Time Limit:** [Minutes or None]
 - **Round Duration:** [If applicable]
 - **Number of Rounds:** [If applicable]
 
 ### Tiebreaker Rules
-[Explain how ties are resolved]
+
+If there is a tie in score, the winner is the one who had the quickest cumulative time. If that somehow is tied as well, fireworks go off and they play a sudden death playoff hole (hole 9 if 18, hole 1 otherwise?) and so on until there is a clear winner.
 
 ---
 
 ## 💀 Death & Respawning
 
 ### Death Conditions
-- [ ] Combat death
-- [ ] Environmental hazards
-- [ ] Out of bounds
-- [ ] Time limit
+
+- [x] Combat death - Death is temporary always, the caddy can always revive the player
+- [x] Environmental hazards - Player is respawned nearest to his death in bounds and loses a stroke.
+- [x] Out of bounds Player is respawned nearest to his death in bounds and loses a stroke.
+- [x] Time limit Player takes a triple bogie on the hole and is transported to the next teebox. Timer starts counting down if there is another 4some waiting on them.
 - [ ] Other: ___________
 
 ### Respawn System
+
 - **Respawn Mode:** [Auto-spawn / Manual spawn / Wave spawn / One-life]
 - **Respawn Delay:** [Seconds or conditions]
 - **Respawn Location:** [Fixed spawns / Team spawns / Dynamic]
 - **Respawn Restrictions:** [Any limits or conditions]
 
 ### Death Penalties
+
 - [ ] Score loss: [Amount]
 - [ ] Equipment loss
 - [ ] Respawn delay
@@ -159,59 +170,72 @@ Get the lowest score
 
 ### Weapon Restrictions
 - [ ] All weapons allowed
-- [ ] Limited weapon types: ___________
+- [x] Limited weapon types: ___________
 - [ ] Custom loadout system
-- [ ] Weapon unlocks/progression
+- [/] Weapon unlocks/progression possibly planned for future if we get the system working despite the lack of network access in the sdk
 
 ### Default Loadout
-- **Primary Weapon:** [Weapon name]
-- **Secondary Weapon:** [Weapon name]
-- **Gadget 1:** [Gadget name]
-- **Gadget 2:** [Gadget name]
-- **Throwable:** [Grenade/throwable type]
+
+- **Primary Weapon:** [Basic Pistol]
+- **Secondary Weapon:** None
+- **Gadget 1:** Mortar
+- **Gadget 2:** Binoculars?
+- **Throwable:** Smoke Grenade
 
 ### Equipment System
-- [ ] Fixed loadouts
+- [x] Fixed loadouts
 - [ ] Loadout selection
-- [ ] In-game pickups
-- [ ] Purchase system
-- [ ] Other: ___________
+- [x] In-game pickups (Through purchase)
+- [x] Purchase system
+- [x] Other:
 
 ### Special Equipment (if applicable)
-- [Item 1]: [Description]
-- [Item 2]: [Description]
-- [Item 3]: [Description]
+
+- Money: Used at the store in between holes and at the pro shop
+- Item 2: [Description]
+- Item 3: [Description]
 
 ---
 
 ## 🗺️ Map & Environment
 
 ### Supported Maps
-1. [Map name 1]
-2. [Map name 2]
-3. [Map name 3]
-4. [etc.]
+
+1. Firestorm (for now)
+2. Large-ish outdoor map 1
+3. Largeish outdoor map 2
+4. Maybe consider creating courses on the smaller maps might make driving between shots interesting
 
 ### Key Locations
-- **[Location 1]:** [Description and purpose]
-- **[Location 2]:** [Description and purpose]
-- **[Location 3]:** [Description and purpose]
+
+- **Fairway:** Cart drives 100% speed, no effect on shot
+- **Rough:** Depending on the type of rough, cart and shot affected
+- **Teebox:** Not sure yet how these will vary
+- **Proshop:** Purchase collectibles, swag, buffs, different carts, get tee times, range balls
+- **Driving Range**: Practice shots, talk to other players, recruit teammates/caddies, try out items
 
 ### Environmental Hazards
-- [Hazard 1]: [Description and effect]
-- [Hazard 2]: [Description and effect]
-- [Hazard 3]: [Description and effect]
+
+- Random Destructible Obstacles: Courses won't play the same every time, randomized obstacles can occur which can change the paths you take through each hole. Start with a few variations of each hole and move towards procedural generated obstacles with a ruleset that still offers multiple paths and options for shot selection and driving path.
+- Wind: Randomized wind with variations on directional vector and intensity
+- Fanatical Spectators with guns: Think Happy Gilmore jackass guy
 
 ### Interactive Objects
-- **[Object Type 1]:** [Description - e.g., "Capture Points - Must be held to score"]
-- **[Object Type 2]:** [Description - e.g., "Supply Crates - Resupply ammo"]
-- **[Object Type 3]:** [Description - e.g., "Teleporters - Move between zones"]
+
+- **Teebox:** Location where each player must start each hole.
+- **Previous Shot Location/Lie** Where the player's shot ended up, must interact with location to enter shot address mode.
+- **Putting Green Lie:** Where the player ended up on the green, starts putting sequence described above
+- **Between hole shop:** Ability to purchase upgrades, items, weapons, ammo, armor, new "balls", cart upgrades, and buffs/debuffs
+- **Cart girl:** Randomly appears several times a round and offers special buffs if you can afford them.
+- **Pro Shop Attendant:** Described above
+- **Driving Range** Described above
 
 ---
 
 ## 📊 Player Variables & Stats
 
 ### Tracked Statistics
+
 - [ ] **Score:** [How it's calculated]
 - [ ] **Kills:** [Standard tracking]
 - [ ] **Deaths:** [Standard tracking]
@@ -223,6 +247,7 @@ Get the lowest score
 - [ ] **Custom Stat 2:** [Description]
 
 ### Player State Variables
+
 | Variable | Type | Purpose |
 |----------|------|---------|
 | [Variable 1] | [number/boolean/string] | [What it tracks] |
@@ -231,32 +256,31 @@ Get the lowest score
 | [Variable 4] | [number/boolean/string] | [What it tracks] |
 
 ### Persistent Data (if applicable)
-- [ ] Cross-match statistics (kept via passcode on separate website due to network restrictions)
-- [ ] Unlocks/progression - money earned 
-- [ ] Achievements
-- [ ] None
+- [x] Cross-match statistics (kept via passcode on separate website due to network restrictions)
+- [x] Unlocks/progression - money earned
+- [x] Achievements
 
 ---
 
 ## 🖥️ UI Elements
 
 ### Lobby/Pre-Game UI
-- [ ] Player count display
-- [ ] Countdown timer per hole and a total round timer
-- [ ] Game rules/instructions - special rules screen at start of game that all players must accept before beginning
-- [ ] Team roster
-- [ ] Map preview
-- [ ] Other: Starting Gear
+- [x] Player count display
+- [x] Countdown timer per hole and a total round timer
+- [x] Game rules/instructions - special rules screen at start of game that all players must accept before beginning
+- [x] Team roster
+- [x] Map/Course preview
+- [x] Other: Starting Gear
 
 ### In-Game HUD
-- [ ] **Score Display:** Scores are shown on the score screen and in the HUD
-- [ ] **Timer:** Timers per hole
-- [ ] **Objective Markers:** Holes are indicated
-- [ ] **Team Indicators:** Identified by color for now
-- [ ] **Progress Bars:** [For captures/objectives]
-- [ ] **Minimap Markers:** Teeboxes, Greens/pins
-- [ ] **Custom HUD Element 1:** Shot Strength
-- [ ] **Custom HUD Element 2:** Shot Direction/Spin/Launch Angle
+- [x] **Score Display:** Scores are shown on the score screen and in the HUD
+- [x] **Timer:** Timers per hole
+- [x] **Objective Markers:** Holes are indicated
+- [x] **Team Indicators:** Identified by color for now
+- [x] **Progress Bars:** [For captures/objectives]
+- [x] **Minimap Markers:** Teeboxes, Greens/pins
+- [x] **Custom HUD Element 1:** Shot Strength
+- [x] **Custom HUD Element 2:** Shot Direction/Spin/Launch Angle
 
 ### Messages & Notifications
 | Event | Message/Notification |
