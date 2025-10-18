@@ -5,6 +5,57 @@ All notable changes to the MortarGolf project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.3] - 2025-10-17
+
+### Added
+- **GolfPlayer Class**: Refactored JsPlayer to fully implement GolfPlayer interface
+  - All golf-specific properties: role, teamId, caddy/golfer references
+  - Current hole state: currentHole, holePhase, shotCount, currentLie
+  - Scoring system: holeScores array, cumulative PlayerStats, money tracking
+  - Shot tracking: lastShotPosition, ballPosition, distanceToPin
+  - Selected club tracking
+  
+- **Player Management Methods**:
+  - `setRole()`: Assign player role (Golfer, Caddy, Spectator)
+  - `assignCaddy()` / `assignGolfer()`: Bidirectional pairing system
+  - `unpair()`: Remove caddy/golfer pairings
+  - `startHole()`: Initialize hole state
+  - `completeHole()`: Record score and update stats
+  - `takeShot()`: Increment shot count
+  - `setLie()`: Update lie type and switch to putting phase
+  - `getTotalScore()`: Get cumulative strokes
+  - `getScoreRelativeToPar()`: Calculate score vs par
+  - `getHoleScore()`: Retrieve specific hole score
+  - `hasCaddy()`: Check caddy assignment
+  - `isOnGreen()`: Check if on green
+
+- **Static Player Methods**:
+  - `getAllGolfers()`: Get all golfer GolfPlayer instances
+  - `getAllCaddies()`: Get all caddy GolfPlayer instances
+  - `getAll()`: Get all GolfPlayer instances
+
+- **State Management Enhancements**:
+  - Added golf-specific state variables: currentHoleNumber, roundStartTime, holeStartTime
+  - Player role tracking arrays: golfers, caddies, spectators
+  - Foursome system with interface and tracking array
+  - State setter functions for all new variables
+  - Helper functions: addGolfer, removeGolfer, addCaddy, removeCaddy, etc.
+  - Foursome management: createFoursome, removeFoursome, clearAllFoursomes
+
+- **Constants**:
+  - Added `minimumInitialPlayerCount` for UI compatibility
+
+### Changed
+- Renamed `JsPlayer` class to `GolfPlayer` throughout codebase
+- Updated player constructor to initialize hole scores array
+- Enhanced `destroyUI()` to clean up all tracked widgets
+- Improved `removeInvalidJSPlayers()` with typed forEach parameters
+
+### Technical
+- Phase 2.1 complete (Player Management System)
+- All player management tasks completed
+- Ready for Phase 2.2 (Team & Group Management)
+
 ## [0.0.2] - 2025-10-17
 
 ### Added

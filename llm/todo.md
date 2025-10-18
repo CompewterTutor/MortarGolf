@@ -1,9 +1,9 @@
 # MortarGolf Development Todo List
 
 **Project**: MortarGolf - Golf with Mortars Game Mode for BF6 Portal  
-**Version**: 0.0.2  
-**Last Updated**: October 17, 2025 (Evening)  
-**Status**: Phase 1 Complete ✅ - Beginning Phase 2
+**Version**: 0.0.3  
+**Last Updated**: October 17, 2025 (Late Evening)  
+**Status**: Phase 2.1 Complete ✅ - Beginning Phase 2.2
 
 ---
 
@@ -32,7 +32,7 @@
 - [x] Create PlayerStats interface (cumulative statistics)
 
 ### 1.3 Constants & Configuration ✅
-- [x] Define version constant [0, 0, 2]
+- [x] Define version constant [0, 0, 3]
 - [x] Set minimum/maximum players (1-32)
 - [x] Define players per foursome (4)
 - [x] Set total holes (9)
@@ -52,15 +52,15 @@
 
 ## Phase 2: Core Game Systems
 
-### 2.1 Player Management System
-- [ ] Create GolfPlayer class extending JsPlayer
-- [ ] Add player properties (role, team, caddy, currentHole, shots, score, money)
-- [ ] Implement player initialization
-- [ ] Implement player cleanup on leave
-- [ ] Create player-caddy pairing system
-- [ ] Track player statistics (strokes, time, money, kills, deaths)
-- [ ] Handle player role switching (golfer/caddy/spectator)
-- [ ] Implement player spawn system by role
+### 2.1 Player Management System ✅ COMPLETE
+- [x] Create GolfPlayer class extending JsPlayer
+- [x] Add player properties (role, team, caddy, currentHole, shots, score, money)
+- [x] Implement player initialization
+- [x] Implement player cleanup on leave
+- [x] Create player-caddy pairing system
+- [x] Track player statistics (strokes, time, money, kills, deaths)
+- [x] Handle player role switching (golfer/caddy/spectator)
+- [x] Implement player spawn system by role
 
 ### 2.2 Team & Group Management
 - [ ] Create Foursome class (4 players max per hole)

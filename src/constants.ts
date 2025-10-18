@@ -8,7 +8,7 @@
 // VERSION & DEBUG FLAGS
 ///////////////////////////////////////////////////////////////////////////////
 
-export const VERSION = [0, 0, 2]; // [major, minor, patch]
+export const VERSION = [0, 0, 3]; // [major, minor, patch]
 export const debugJSPlayer = true;
 export const debugMode = true; // DISABLE BEFORE SHARING
 
@@ -17,6 +17,7 @@ export const debugMode = true; // DISABLE BEFORE SHARING
 ///////////////////////////////////////////////////////////////////////////////
 
 export const minimumPlayers: number = 1;       // For testing
+export const minimumInitialPlayerCount: number = 1; // For testing (alias)
 export const maximumPlayers: number = 32;      // Max server capacity
 export const playersPerFoursome: number = 4;   // Max in a group (2 golfers + 2 caddies)
 export const combatStartDelaySeconds: number = 30;
