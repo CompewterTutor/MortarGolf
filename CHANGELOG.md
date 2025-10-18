@@ -5,6 +5,88 @@ All notable changes to the MortarGolf project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.5] - 2025-10-17
+
+### Added
+- **State Machine System** (`statemachine.ts`): Complete game state management
+  - Valid state transition system with guards
+  - GameState machine: Lobby → TeeTime → Countdown → Playing → Shopping → RoundEnd → GameOver
+  - State entry/exit callbacks for custom behavior per state
+  - State transition functions: `startTeeTime()`, `startCountdown()`, `startPlaying()`, `openShop()`, `endHole()`, `endRound()`, `nextHole()`, `returnToLobby()`
+  - State query functions: `isInLobby()`, `isPlaying()`, `isShopOpen()`, etc.
+  - State timer system with countdown support
+  - Pause/resume functionality for game states
+  - Automatic state initialization on game start
+
+- **State-Specific Update Loops** (`updates.ts`): Different logic per game state
+  - Fast tick updates (60fps) for each state with switch-case logic
+  - Slow throttled updates (1s) for each state with timer management
+  - Lobby updates: Matchmaking queue processing, player count checks
+  - TeeTime updates: Tee box readiness checks, countdown display
+  - Countdown updates: Countdown messages, auto-transition to playing
+  - Playing updates: Shot tracking, hole completion detection, victory conditions
+  - Shopping updates: Shop timer display, auto-close and transition to next hole
+  - RoundEnd updates: Score display, automatic progression
+  - GameOver updates: Final scores and stats display
+  - Helper functions: `checkAllPlayersComplete()`, `updatePlayerUI()`
+
+- **Timer System**: Countdown timers for all game phases
+  - Lobby countdown (10s configurable)
+  - Tee time countdown (30s to reach tee box)
+  - Combat countdown (5s before play starts)
+  - Shop duration (30s shopping window)
+  - Round end display (10s score viewing)
+  - State timer management with automatic decrements
+
+- **Event Handler Integration** (`events.ts`): State machine integration
+  - Initialize state machine in `OnGameModeStarted()`
+  - Automatic matchmaking queue additions on player join
+  - State-aware player spawning based on role
+  - Death penalties during playing state (+1 stroke for golfers)
+  - State-based UI display (lobby, game, shop)
+  - Player role tracking on team switches
+
+- **Constants**: Added timing constants for state transitions
+  - `LOBBY_COUNTDOWN_SECONDS`: 10
+  - `TEE_TIME_COUNTDOWN_SECONDS`: 30
+  - `COMBAT_COUNTDOWN_SECONDS`: 5
+  - `ROUND_END_DISPLAY_SECONDS`: 10
+
+### Changed
+- **Update Loops**: Completely refactored with state-specific behavior
+  - Replaced simple continuous loops with state machine-driven updates
+  - Added pause detection to skip updates when game is paused
+  - Separated fast (60fps) and slow (1s) logic per state
+  - Improved player validation in update loops (use `GolfPlayer` instances)
+
+- **Game Flow**: Removed legacy combat countdown, now managed by state machine
+  - Game automatically progresses through states based on conditions
+  - Timer-based automatic transitions (shop closes, holes advance, etc.)
+  - Player actions trigger state changes (all holed out → end hole)
+
+### Fixed
+- **Player Instance Access**: Corrected all player property access patterns
+  - Use `GolfPlayer.getAllGolfers()` instead of raw `playerInstances`
+  - Fixed player validity checks to use `mod.IsPlayerValid(golfPlayer.player)`
+  - Consistent use of GolfPlayer class throughout codebase
+
+### Technical
+- Phase 2.3 complete (State Management System) ✅
+- State machine handles all game flow transitions
+- Update loops are now state-driven with proper separation of concerns
+- Build system updated to include `statemachine.ts` (3590 total lines compiled)
+- All state transitions validated and protected
+- Pause/resume system ready for admin controls
+- Foundation ready for UI phase-specific implementations
+- Next: Phase 2.4 would be additional polish, but moving to Phase 3 (Golf Course System)
+
+### Architecture Notes
+- State machine uses Map-based transition validation
+- Callbacks allow custom logic on state enter/exit
+- Timer system integrated into state machine (not separate)
+- State persistence handled through state variables
+- All state queries are centralized for easy debugging
+
 ## [0.0.4] - 2025-10-17
 
 ### Added

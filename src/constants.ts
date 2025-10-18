@@ -8,7 +8,7 @@
 // VERSION & DEBUG FLAGS
 ///////////////////////////////////////////////////////////////////////////////
 
-export const VERSION = [0, 0, 4]; // [major, minor, patch]
+export const VERSION = [0, 0, 5]; // [major, minor, patch]
 export const debugJSPlayer = true;
 export const debugMode = true; // DISABLE BEFORE SHARING
 
@@ -104,10 +104,11 @@ export const tickRate: number = 0.016;         // 60fps
 export const slowTickRate: number = 1;         // 1 second
 export const messageDisplayTime: number = 5;   // Message duration
 
-export const LOBBY_WAIT_TIME: number = 10;     // Wait for players in lobby
-export const HOLE_COUNTDOWN: number = 5;       // Countdown before hole starts
-export const ROUND_END_DELAY: number = 10;     // Delay before next hole
-export const GAME_OVER_DELAY: number = 20;     // Delay at end of game
+export const LOBBY_COUNTDOWN_SECONDS: number = 10;     // Wait for players in lobby
+export const TEE_TIME_COUNTDOWN_SECONDS: number = 30; // Time to reach tee box
+export const COMBAT_COUNTDOWN_SECONDS: number = 5;   // Countdown before playing starts
+export const ROUND_END_DISPLAY_SECONDS: number = 10; // Display scores after hole
+export const GAME_OVER_DELAY: number = 20;          // Delay at end of game
 
 export const REVIVE_TIME: number = 5;          // Seconds to revive
 export const RESPAWN_DELAY: number = 10;       // Respawn after caddy death

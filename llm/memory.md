@@ -3,23 +3,114 @@
 **Project**: MortarGolf - Golf with Mortars Game Mode  
 **Started**: October 17, 2025  
 **Current Phase**: Phase 2 - Core Game Systems (In Progress)  
-**Status**: Phase 2.2 Complete ✅ - Team & Group Management System
+**Status**: Phase 2.3 Complete ✅ - State Management System
 
 ---
 
 ## Current State
 
 ### What We're Working On
-- **Phase 2.2 Complete** ✅: Team & Group Management System
-  - ✅ Foursome class with full group management
-  - ✅ Matchmaking queue system
-  - ✅ Team color assignment
-  - ✅ Multi-foursome tracking
-  - **Next**: Phase 2.3 - State Management System
+- **Phase 2.3 Complete** ✅: State Management System
+  - ✅ Complete state machine with transition validation
+  - ✅ State-specific update loops
+  - ✅ Timer system for all game phases
+  - ✅ Pause/resume functionality
+  - ✅ Event handler integration
+  - **Next**: Moving to Phase 3 (Golf Course System) or UI improvements
 
-### Recently Completed (October 17, 2025 - Late Evening Session)
+### Recently Completed (October 17, 2025 - Night Session)
 
-**Version 0.0.4 - Team & Group Management System** ✅
+**Version 0.0.5 - State Management System** ✅
+
+1. ✅ **State Machine** (`src/statemachine.ts`):
+   - Complete game state flow: Lobby → TeeTime → Countdown → Playing → Shopping → RoundEnd → GameOver
+   - Transition validation with Map-based valid transitions
+   - State entry/exit callbacks for custom behavior
+   - State transition functions:
+     - `transitionTo()`: Core transition with validation
+     - `startTeeTime()`: Begin tee time phase
+     - `startCountdown()`: Start countdown before playing
+     - `startPlaying()`: Enable combat and shots
+     - `openShop()`: Open shopping phase
+     - `endHole()`: Complete hole and show scores
+     - `endRound()`: End entire round
+     - `nextHole()`: Progress to next hole
+     - `returnToLobby()`: Reset to lobby
+   - State query functions: `isInLobby()`, `isPlaying()`, `isShopOpen()`, etc.
+   - Timer system: `setStateTimer()`, `decrementStateTimer()`, `isStateTimerExpired()`
+   - Pause/resume: `pauseGame()`, `resumeGame()`, `isGamePaused()`
+   - Elapsed time tracking per state
+
+2. ✅ **State-Specific Updates** (`src/updates.ts`):
+   - Refactored update loops to be state-driven
+   - Fast tick update (60fps) with switch-case for each state
+   - Slow throttled update (1s) with state-specific logic
+   - Lobby updates:
+     - Process matchmaking queue
+     - Check minimum player count
+     - Display countdown when ready
+   - TeeTime updates:
+     - Check if players reached tee box
+     - Display time remaining
+     - Auto-transition to countdown
+   - Countdown updates:
+     - Display countdown messages
+     - Auto-transition to playing
+   - Playing updates:
+     - Shot trajectory preview (fast)
+     - Hole completion detection (slow)
+     - Victory condition checks
+     - Player UI updates
+   - Shopping updates:
+     - Display shop timer
+     - Notify players when closing
+     - Auto-close and move to next hole
+   - RoundEnd updates:
+     - Display scores
+     - Auto-progress to shop or game over
+   - GameOver updates:
+     - Display final scores
+     - Generate passcodes (TODO)
+   - Helper functions: `checkAllPlayersComplete()`, `updatePlayerUI()`
+
+3. ✅ **Timer System**:
+   - Lobby countdown: 10 seconds (configurable)
+   - Tee time: 30 seconds to reach tee box
+   - Combat countdown: 5 seconds before play starts
+   - Shop duration: 30 seconds shopping window
+   - Round end display: 10 seconds score viewing
+   - Automatic timer decrements in throttled update
+   - Countdown display to players
+   - Timer expiration triggers state transitions
+
+4. ✅ **Event Handler Integration** (`src/events.ts`):
+   - Initialize state machine in `OnGameModeStarted()`
+   - Removed legacy combat countdown (now state-driven)
+   - Matchmaking queue integration on player join
+   - State-aware player spawning based on role
+   - Death penalties during playing state
+   - State checks for UI display
+   - Player role tracking on team switches
+   - Graceful player disconnect handling
+
+5. ✅ **Constants**: Added timing constants
+   - `LOBBY_COUNTDOWN_SECONDS`: 10
+   - `TEE_TIME_COUNTDOWN_SECONDS`: 30
+   - `COMBAT_COUNTDOWN_SECONDS`: 5
+   - `ROUND_END_DISPLAY_SECONDS`: 10
+   - `GAME_OVER_DELAY`: 20
+
+6. ✅ **Build System**: Updated to include statemachine.ts
+   - Successfully compiles to 3590 lines
+   - All TypeScript errors resolved
+   - Clean build with no warnings
+
+7. ✅ **Version Bump**: 0.0.4 → 0.0.5 using automated script
+8. ✅ **Documentation Updates**: CHANGELOG.md, memory.md, todo.md
+
+### Previous Sessions
+
+**Version 0.0.4 - Team & Group Management System** (Oct 17, Evening)
 
 1. ✅ **Foursome Class** (`src/foursome.ts`):
    - Complete group management for up to 4 players (2 golfers + 2 caddies)
@@ -196,6 +287,40 @@ src/
 **Location**: Root of mod folder alongside compiled TypeScript  
 **Examples**: See BombSquad.strings.json, Vertigo.strings.json for reference patterns  
 **Documentation**: Added comprehensive section to dev_guidelines.md with prominent reminder  
+**Date**: October 17, 2025
+
+#### State Machine Architecture
+**Decision**: Implement formal state machine with validation rather than simple state variables  
+**Reason**: Complex game flow with many states and transitions needs proper management  
+**Architecture**:
+- Map-based valid transition validation (prevents invalid state changes)
+- State entry/exit callbacks for custom behavior
+- Centralized state transition functions
+- Integrated timer system per state
+- Pause/resume capability built-in
+**Benefits**:
+- Prevents bugs from invalid state transitions
+- Easy to debug current state and transitions
+- Clean separation of concerns per state
+- Scalable for additional states if needed
+**Trade-offs**: Slightly more complex than simple flags, but much more maintainable
+**Pattern**: Follows standard state machine patterns from game development
+**Date**: October 17, 2025
+
+#### Update Loop Architecture
+**Decision**: Split update logic by game state using switch-case rather than scattered if statements  
+**Reason**: Better organization, clearer code, easier to maintain and extend  
+**Implementation**:
+- Two main loops: Fast (60fps via mod.Wait(tickRate)) and Slow (1s)
+- Switch-case on current game state in each loop
+- Separate functions per state (updateLobbyTick, updatePlayingThrottled, etc.)
+- Pause detection built into main loops
+**Benefits**:
+- Clear what code runs in which state
+- Easy to add new states
+- Performance: only relevant code runs per state
+- Debugging: can trace execution by state
+**Alternative Considered**: Single monolithic update with many if statements - rejected as unmaintainable
 **Date**: October 17, 2025
 
 ---

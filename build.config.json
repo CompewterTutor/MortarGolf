@@ -9,6 +9,7 @@
     "types.ts",
     "constants.ts",
     "state.ts",
+    "statemachine.ts",
     "helpers.ts",
     "ui.ts",
     "player.ts",

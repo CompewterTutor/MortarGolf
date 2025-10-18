@@ -13,10 +13,13 @@ import {
     setGameOver,
     combatStartDelayRemaining
 } from './state';
-import { JsPlayer } from './player';
+import { GolfPlayer } from './player';
 import { HideAllMessageUI, UpdateAllLobbyUI } from './messages';
 import { CombatCountdown } from './gameflow';
 import { TickUpdate, ThrottledUpdate } from './updates';
+import * as stateMachine from './statemachine';
+import { MatchmakingQueue } from './matchmaking';
+import { PlayerRole } from './types';
 
 ///////////////////////////////////////////////////////////////////////////////
 // EXPORTED EVENT HANDLERS
@@ -28,27 +31,27 @@ import { TickUpdate, ThrottledUpdate } from './updates';
 export async function OnGameModeStarted(): Promise<void> {
     console.log("Game Mode Started - Version", VERSION[0], ".", VERSION[1], ".", VERSION[2]);
     
-    // 1. Configure game settings
+    // 1. Initialize state machine
+    stateMachine.initializeStateMachine();
+    
+    // 2. Configure game settings
     mod.SetFriendlyFire(false);
     mod.SetSpawnMode(mod.SpawnModes.AutoSpawn);
     
-    // 2. Setup game objects (HQs, objectives, etc.)
+    // 3. Setup game objects (HQs, objectives, etc.)
     let mainHQ = mod.GetHQ(mainHQID);
     mod.EnableHQ(mainHQ, true);
     
-    // 3. Wait for minimum players
-    while (initialPlayerCount < minimumInitialPlayerCount) {
-        await mod.Wait(1);
-    }
-    
-    console.log("Adequate players have joined. Starting countdown.");
-    
-    // 4. Start countdown
-    await CombatCountdown();
-    
-    // 5. Begin update loops (don't await these)
+    // 4. Begin update loops (these run continuously)
     TickUpdate();
     ThrottledUpdate();
+    
+    // 5. Display welcome message
+    mod.DisplayHighlightedWorldLogMessage(
+        mod.Message("welcomeMessage")
+    );
+    
+    console.log("MortarGolf initialized - waiting for players...");
 }
 
 /**
@@ -74,17 +77,27 @@ export function OngoingGlobal(): void {
 export async function OnPlayerJoinGame(player: mod.Player): Promise<void> {
     await mod.Wait(0.1); // Small delay for initialization
     
-    let jsPlayer = JsPlayer.get(player);
-    if (!jsPlayer) return;
+    let golfPlayer = GolfPlayer.get(player);
+    if (!golfPlayer) return;
     
     // Check if human player
     if (!mod.GetSoldierState(player, mod.SoldierStateBool.IsAISoldier)) {
-        if (!combatStarted) {
-            jsPlayer.lobbyUI?.open();
+        // Add to matchmaking queue
+        MatchmakingQueue.addPlayer(player, PlayerRole.Golfer);
+        
+        // Show lobby UI if in lobby
+        if (stateMachine.isInLobby() || stateMachine.isInTeeTime()) {
+            golfPlayer.lobbyUI?.open();
             incrementInitialPlayerCount();
             console.log("Player joined. Total:", initialPlayerCount);
             UpdateAllLobbyUI();
         }
+        
+        // Display welcome message to player
+        mod.DisplayNotificationMessage(
+            mod.Message("welcomeMessage"),
+            player
+        );
     }
 }
 
@@ -92,7 +105,17 @@ export async function OnPlayerJoinGame(player: mod.Player): Promise<void> {
  * Called when a player leaves the game
  */
 export async function OnPlayerLeaveGame(playerId: number): Promise<void> {
-    JsPlayer.removeInvalidJSPlayers(playerId);
+    // Get player before removing
+    const allPlayers = GolfPlayer.getAll();
+    const leavingPlayer = allPlayers.find(gp => mod.GetObjId(gp.player) === playerId);
+    
+    // Remove from matchmaking queue
+    if (leavingPlayer) {
+        MatchmakingQueue.removePlayer(leavingPlayer.player);
+    }
+    
+    // Clean up player instance
+    GolfPlayer.removeInvalidJSPlayers(playerId);
     
     if (!combatStarted) {
         decrementInitialPlayerCount();
@@ -104,16 +127,19 @@ export async function OnPlayerLeaveGame(playerId: number): Promise<void> {
  * Called when a player deploys into the game
  */
 export function OnPlayerDeployed(eventPlayer: mod.Player): void {
-    let jsPlayer = JsPlayer.get(eventPlayer);
-    if (!jsPlayer) return;
+    let golfPlayer = GolfPlayer.get(eventPlayer);
+    if (!golfPlayer) return;
     
-    jsPlayer.isDeployed = true;
+    golfPlayer.isDeployed = true;
     
-    // Setup player loadout, position, etc.
-    if (!combatStarted) {
-        // Pre-game spawn logic
-    } else {
-        // In-game spawn logic
+    // Setup player based on role and game state
+    if (stateMachine.isPlaying()) {
+        // Spawn at appropriate location based on role
+        if (golfPlayer.role === PlayerRole.Golfer) {
+            // Spawn at ball/shot location
+        } else if (golfPlayer.role === PlayerRole.Caddy) {
+            // Spawn near golfer
+        }
     }
 }
 
@@ -121,10 +147,10 @@ export function OnPlayerDeployed(eventPlayer: mod.Player): void {
  * Called when a player undeploys
  */
 export function OnPlayerUndeploy(eventPlayer: mod.Player): void {
-    let jsPlayer = JsPlayer.get(eventPlayer);
-    if (!jsPlayer) return;
+    let golfPlayer = GolfPlayer.get(eventPlayer);
+    if (!golfPlayer) return;
     
-    jsPlayer.isDeployed = false;
+    golfPlayer.isDeployed = false;
 }
 
 /**
@@ -136,15 +162,21 @@ export function OnPlayerDied(
     eventDeathType: mod.DeathType,
     eventWeaponUnlock: mod.WeaponUnlock
 ): void {
-    let jsPlayer = JsPlayer.get(eventPlayer);
-    if (!jsPlayer) return;
+    let golfPlayer = GolfPlayer.get(eventPlayer);
+    if (!golfPlayer) return;
     
-    jsPlayer.deaths++;
+    golfPlayer.deaths++;
+    golfPlayer.stats.totalDeaths++;
     
-    // Handle death logic
-    // - Update scores
-    // - Check victory conditions
-    // - Trigger events
+    // Apply death penalty if during playing
+    if (stateMachine.isPlaying() && golfPlayer.role === PlayerRole.Golfer) {
+        golfPlayer.shotCount++; // +1 stroke penalty
+        
+        mod.DisplayNotificationMessage(
+            mod.Message("playerDowned"),
+            eventPlayer
+        );
+    }
 }
 
 /**
@@ -161,14 +193,11 @@ export function OnPlayerEarnedKill(
         return;
     }
     
-    let jsPlayer = JsPlayer.get(eventPlayer);
-    if (!jsPlayer) return;
+    let golfPlayer = GolfPlayer.get(eventPlayer);
+    if (!golfPlayer) return;
     
-    jsPlayer.score++;
-    
-    // Handle kill logic
-    // - Award points
-    // - Update UI
+    golfPlayer.score++;
+    golfPlayer.stats.totalKills++;
 }
 
 /**
@@ -180,9 +209,9 @@ export function OnPlayerDamaged(
     eventDamageType: mod.DamageType,
     eventWeaponUnlock: mod.WeaponUnlock
 ): void {
-    // Handle damage events
-    // - Custom damage modifiers
-    // - Damage feedback
+    // Custom damage modifiers based on game state
+    // - Reduce damage during shot setup?
+    // - Increase damage in certain areas?
 }
 
 /**
@@ -193,13 +222,13 @@ export async function OnPlayerInteract(
     interactPoint: mod.InteractPoint
 ): Promise<void> {
     let id = mod.GetObjId(interactPoint);
-    let jsPlayer = JsPlayer.get(player);
-    if (!jsPlayer) return;
+    let golfPlayer = GolfPlayer.get(player);
+    if (!golfPlayer) return;
     
     // Switch on interact point ID
     switch (id) {
         case interactPointID:
-            // Handle interaction
+            // Handle interaction (shop, tee box, etc.)
             console.log("Player interacted with object:", id);
             break;
         
@@ -215,7 +244,11 @@ export function OnPlayerSwitchTeam(
     eventPlayer: mod.Player,
     eventTeam: mod.Team
 ): void {
-    console.log("Player switched to team:", mod.GetObjId(eventTeam));
+    let golfPlayer = GolfPlayer.get(eventPlayer);
+    if (golfPlayer) {
+        golfPlayer.teamId = mod.GetObjId(eventTeam);
+        console.log("Player switched to team:", golfPlayer.teamId);
+    }
 }
 
 /**
@@ -226,8 +259,15 @@ export function OnPlayerEnterAreaTrigger(
     eventAreaTrigger: mod.AreaTrigger
 ): void {
     let id = mod.GetObjId(eventAreaTrigger);
+    let golfPlayer = GolfPlayer.get(eventPlayer);
+    if (!golfPlayer) return;
     
-    // Handle area trigger entry
+    // Handle area trigger entry based on type
+    // - Tee box: Start hole
+    // - Green: Switch to putting mode
+    // - Out of bounds: Apply penalty
+    // - Shop: Open shop UI
+    
     console.log("Player entered area trigger:", id);
 }
 
@@ -251,7 +291,7 @@ export function OnPlayerEnterCapturePoint(
     eventPlayer: mod.Player,
     eventCapturePoint: mod.CapturePoint
 ): void {
-    // Handle capture point entry
+    // Handle capture point entry (if used for mechanics)
 }
 
 /**
@@ -270,7 +310,7 @@ export function OnPlayerExitCapturePoint(
 export function OnCapturePointCapturing(
     eventCapturePoint: mod.CapturePoint
 ): void {
-    // Display capture progress
+    // Display capture progress (if used)
 }
 
 /**
@@ -287,9 +327,9 @@ export function OnCapturePointCaptured(
  * Called when a vehicle spawns
  */
 export async function OnVehicleSpawned(eventVehicle: mod.Vehicle): Promise<void> {
-    // Handle vehicle spawn
-    // - Custom vehicle behavior
-    // - Destroy in certain areas
+    // Handle vehicle spawn - golf carts
+    // - Set vehicle properties
+    // - Assign to players
 }
 
 /**
@@ -299,7 +339,7 @@ export function OnVehicleDestroyed(
     eventVehicle: mod.Vehicle,
     eventPlayer: mod.Player
 ): void {
-    // Handle vehicle destruction
+    // Handle vehicle destruction - golf cart destroyed
 }
 
 /**
@@ -310,10 +350,12 @@ export function OnPlayerUIButtonEvent(
     widget: mod.UIWidget,
     event: mod.UIButtonEvent
 ): void {
-    let jsPlayer = JsPlayer.get(player);
-    if (!jsPlayer) return;
+    let golfPlayer = GolfPlayer.get(player);
+    if (!golfPlayer) return;
     
-    // Handle button events
-    // - Store purchases
+    // Handle button events based on game state
+    // - Shop purchases
     // - Menu navigation
+    // - Club selection
+    // - Shot confirmation
 }
