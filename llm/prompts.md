@@ -24,3 +24,7 @@ Continue development on our project using the guidelines in llm/dev_guidelines.m
 v 0.0.3
 
 make a note in the dev guidelines that the root of the project's git repository is the specific mod folder so that when you run git commands it should be in the MortarGolf directory. Also create a python script that runs using the SDK's bundled version of python to do the version bump for us and make a note in the dev guidelines that version bumping will use that script. write a proper commit msg, update the todo and the memory, and i'll commit and move to the next item on the todo list in the next chat
+
+
+--
+Remember to make any strings that show up in the game contained in a file called MortarGolf.strings.json. you can refer to the format in the other 1st party mods. Please make a note of this in the dev guidelines and the memory

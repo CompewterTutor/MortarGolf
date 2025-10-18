@@ -188,11 +188,13 @@ src/
 **Date**: October 17, 2025
 
 #### Localization Strings File
-**Decision**: All user-facing text must be in `MortarGolf.strings.json`  
+**Decision**: All user-facing text must be in `MortarGolf.strings.json` - **CRITICAL REQUIREMENT**  
 **Reason**: Follow SDK best practices for localization support  
-**Format**: JSON file with string keys and placeholder support  
+**Rule**: **NEVER** hardcode display strings in TypeScript - always use the strings file with `mod.Message()`  
+**Format**: JSON file with string keys and placeholder support (e.g., `{}` for dynamic values)  
 **Location**: Root of mod folder alongside compiled TypeScript  
-**Documentation**: Added comprehensive section to dev_guidelines.md  
+**Examples**: See BombSquad.strings.json, Vertigo.strings.json for reference patterns  
+**Documentation**: Added comprehensive section to dev_guidelines.md with prominent reminder  
 **Date**: October 17, 2025
 
 ---
@@ -286,8 +288,9 @@ None at this time.
 3. Update memory.md with any important decisions
 4. Keep CHANGELOG.md current
 5. Test with multiple player counts early and often
-6. **All user-facing text goes in MortarGolf.strings.json** - Never hardcode strings in TypeScript
+6. **🔴 CRITICAL: All user-facing text goes in MortarGolf.strings.json** - Never hardcode strings in TypeScript, always use `mod.Message()`
 7. Use the version bump script for all version updates
+8. Reference existing 1st party mod strings files (BombSquad, Vertigo) for format examples
 
 ---
 

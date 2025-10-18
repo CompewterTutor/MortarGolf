@@ -316,6 +316,8 @@ export function OnPlayerLeaveGame(player: mod.Player): void {
 
 #### Localization Strings File
 
+**🔴 CRITICAL REQUIREMENT 🔴**: **ALL** user-facing text strings that appear in the game **MUST** be defined in `MortarGolf.strings.json` for localization support. Never hardcode display strings directly in TypeScript code - always use the strings file with `mod.Message()`.
+
 **IMPORTANT**: All user-facing text strings must be defined in `MortarGolf.strings.json` for localization support.
 
 The strings file should be placed at the root of the mod folder alongside the compiled TypeScript file.
