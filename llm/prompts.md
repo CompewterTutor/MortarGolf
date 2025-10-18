@@ -14,6 +14,8 @@ Using the guidelines in .llm/dev_guidelines.md and the documentation provided in
 ### Basic Development
 ***This is a generic development prompt essentially bootstrapping each separate task. Cater this to your liking per task.***
 
+Continue development on our project using the guidelines in llm/dev_guidelines.md. Refer to the todo.md file in the llm folder to direct you on the next task and consult the memory file for history on what has been accomplished. Refer to the docs in the DOCS folder and also in the llm folder for any references you may need. After finishing a sub task, bump the version of the project, update the todo and the memory for the next task and create a proper commit msg detailing changes. Add new stuff to the changelog and address any changes that may need to be documented in the project readme.
+
 
 ### Cleanup Documentation
 ***Run this prompt when your todo and memory documentation for your LLM are getting long and taking up a lot of context. I typically try to keep my todo and memory files under 5-600 lines.
