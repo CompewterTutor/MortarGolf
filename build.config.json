@@ -1,0 +1,20 @@
+{
+  "modName": "MortarGolf",
+  "description": "Battlefield 6 Portal - MortarGolf Game Mode",
+  "version": [1, 0, 0],
+  "sourceDir": "src",
+  "outputFile": "MortarGolf.ts",
+  "entryPoint": "events.ts",
+  "files": [
+    "types.ts",
+    "constants.ts",
+    "state.ts",
+    "helpers.ts",
+    "ui.ts",
+    "player.ts",
+    "messages.ts",
+    "gameflow.ts",
+    "updates.ts",
+    "events.ts"
+  ]
+}

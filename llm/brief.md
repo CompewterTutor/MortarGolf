@@ -1,18 +1,18 @@
 # Game Mode Brief: [Your Game Mode Name]
 
-> **Quick Summary:** [One sentence describing your game mode]
+> **Quick Summary:** MortarGolf is a gamemode where you play a wacky version of golf with mortars and try to get the lowest score with some help from your caddy ai or friend. Speed is a factor and watch out for pesky opponents trying to shoot during your downswing.
 
 ---
 
 ## 📋 Basic Information
 
-**Game Mode Name:** [Your Game Mode Name]  
-**Version:** [1.0.0]  
-**Author:** [Your Name/Team]  
-**Last Updated:** [Date]  
+**Game Mode Name:** MortarGolf
+**Version:** [0.0.1]
+**Author:** [CompewterTutor]
+**Last Updated:** [10/17/25]
 
 **Development Status:**
-- [ ] Planning
+- [x] Planning
 - [ ] In Development
 - [ ] Testing
 - [ ] Complete
@@ -22,24 +22,27 @@
 ## 🎮 Game Description
 
 ### Overview
-[Provide a 2-3 paragraph description of your game mode. Explain the core concept, what makes it unique, and what players should expect.]
+MortarGolf is a wacky take on the regular rules of golf. Each player starts at the 1st hole teebox and needs to shoot mortars to try to get to the "green" and then putt in the goal. When playing the combat mode, you can shoot at opponents while they are driving/shooting to disrupt them, but watch out from counterfire from their caddy. Speed is a factor, so driving your golfcart  (jeep/humvee) from shot to shot across obstacles and gunfire will affect how well you score speedwise. Up to 4 players/4 caddies can play on a single hole at a time. Teeboxes are big enough for all players to tee off at the same time.
 
 ### Core Gameplay Loop
-[Describe the main gameplay loop - what players do repeatedly throughout the match]
+Players all play on the same hole at the same time and they do not move onto the next hole (out of 9) before the last person has sunk their putt. Depending on who scored the lowest on the previous hole they get to pick their teeoff spot and the speed in which they finish will determine how much money they receive to buy equipment for the next hole. Players compete to see who has the best score/time combination at the end of the course (9 or 18 holes)
 
-1. [First step in the loop]
-2. [Second step in the loop]
-3. [Third step in the loop]
-4. [etc.]
+1. Matchmaking to gather a foursome with or without player caddies (ai will be supplied if they don't have a caddy)
+2. Players meetup at the first teebox and all setup to address the "ball" at the same time. A countdown timer begins while they line up their shot and when it goes off they are given the UI to fire their shot.
+3. Players then drive to their next shot while fending off the other players and attempting to finish the hole as fast as they can. If you down a player, they must recover (caddy has to revive them) so they are unable to take a shot until they are back up.
+4. Once players reach the "green" area, they must "putt" using a dart and a randomized target. Depending on how close they are to a bullseye on their putt, the next target spawns a corresponding distance within a designated randomized range from them for the next shot. If they get a bullseye/headshot, they finish the hole, moving to the next teebox and no longer taking damage from opponents fire.
+5. Scores for the last hole are tallied, with their golf score determining the shot order for the next hole and amount of a headstart (3 seconds per shot by default, adjustable though). Scores under par are given a bonus, and based on the speed they finished the hole they are awarded cash to spend at the next hole's "market" before the next hole begins. Items like ammo, armor, weaponry and gadgets are available at random to the golfers but the store offers the same items for all players in the group.
+6. At the end of the course, scores are tallied and a podium is shown with the winners/losers. Since the sdk doesn't allow for networking, we can't keep track of scores across multiple games, but to get around this, the gamestate and score for the player is serialized and hashed so that the player can later visit a website created for the game to keep track of a player's career. Leaderboard can be found in the "Pro Shop" and special titles can be purchased by the players as swag.
+7. Players can spend time at the pro shop to sign up for tee times or driving range to practice mechanics before or after the game. The server will be long running so you can play multiple rounds without leaving and signup for "tee times" throughout the day.
 
 ### Game Mode Type
-- [ ] Team-based
+- [x] Team-based
 - [ ] Free-for-all
 - [ ] Cooperative
 - [ ] Competitive
-- [ ] Objective-based
+- [x] Objective-based
 - [ ] Elimination
-- [ ] Race/Time Trial
+- [x] Race/Time Trial
 - [ ] Other: ___________
 
 ---
@@ -47,22 +50,24 @@
 ## 👥 Players & Teams
 
 ### Player Count
-- **Minimum Players:** [Number]
-- **Maximum Players:** [Number]
-- **Recommended:** [Number]
+- **Minimum Players:** [1]
+- **Maximum Players:** [32]
+- **Recommended:** [4-16]
 
 ### Team Configuration
-- **Number of Teams:** [1/2/3/4/etc.]
-- **Team 1:** [Name] - [Color] - [Role/Description]
-- **Team 2:** [Name] - [Color] - [Role/Description]
-- **Team 3:** [Name] - [Color] - [Role/Description]
-- **Team 4:** [Name] - [Color] - [Role/Description]
+- **Number of Teams:** [1/2/3/4/ of 1 or two players each]
+- 4 teams per round (on a hole at once)
+- **Team 1:** [Red] - [Red] - [Player/Caddy]
+- **Team 2:** [Blue] - [Blue] - [Player/Caddy]
+- **Team 3:** [Green] - [Green] - [Player/Caddy]
+- **Team 4:** [Yellow] - [Yellow] - [Player/Caddy]
+Up to 4 groups on the server at once
 
 ### Team Balance
 - [ ] Auto-balance enabled
-- [ ] Fixed team sizes
+- [x] Fixed team sizes
 - [ ] Dynamic team assignment
-- [ ] Player choice
+- [x] Player choice
 - [ ] Other: ___________
 
 ---
@@ -70,35 +75,31 @@
 ## 🎯 Objectives & Rules
 
 ### Primary Objective
-[Describe the main goal players must achieve to win]
+Get the lowest score
 
 ### Secondary Objectives (if applicable)
-1. [Secondary objective 1]
-2. [Secondary objective 2]
-3. [etc.]
+1. Fastest Time
+2. Most Damage
+3. Money earned
 
-### Core Rules
-1. [Rule 1]
-2. [Rule 2]
-3. [Rule 3]
-4. [Rule 4]
-5. [etc.]
 
 ### Gameplay Phases
-#### Phase 1: [Phase Name]
-- **Duration:** [Time or event-based]
-- **Description:** [What happens in this phase]
-- **Player Actions:** [What players can do]
+#### Phase 1: [Pro Shop/Tee Time assignment]
+- **Duration:** [Until teetime comes]
+- **Description:** [Players can checkout leaderboards or signup for tee times and get assigned caddy/group]
+- **Player Actions:** [view leaderboard, go to driving range, watch from gallery other players]
 
-#### Phase 2: [Phase Name]
-- **Duration:** [Time or event-based]
-- **Description:** [What happens in this phase]
-- **Player Actions:** [What players can do]
+#### Phase 2: [TeeTime]
+- **Duration:** [Players have 30 seconds to get from their carts to the first tee]
+- **Description:** Drive to the tee, view teams
+- **Player Actions:** [Get in jeep, drive to tee, select "club"]
 
-#### Phase 3: [Phase Name]
-- **Duration:** [Time or event-based]
-- **Description:** [What happens in this phase]
-- **Player Actions:** [What players can do]
+#### Phase 3: Tee-Off
+- **Duration:** Players are given a 10 second countdown to the start of the round once they all reach the teebox.
+- **Description:** Players are placed in the "shooting" state on the teebox and can adjust the tee to make their shot as good as possible both for position and for ease of getting their via their jeep.
+- **Player Actions:** adjust shot launch angle, direction, and spin. Then once they start their "backswing" they attempt to shoot via a meter where they have to click once to start the shot, once to determine the power of the shot and once for the followthrough which will determine hook/slice amount.
+
+
 
 ---
 
@@ -230,8 +231,8 @@
 | [Variable 4] | [number/boolean/string] | [What it tracks] |
 
 ### Persistent Data (if applicable)
-- [ ] Cross-match statistics
-- [ ] Unlocks/progression
+- [ ] Cross-match statistics (kept via passcode on separate website due to network restrictions)
+- [ ] Unlocks/progression - money earned 
 - [ ] Achievements
 - [ ] None
 
@@ -241,21 +242,21 @@
 
 ### Lobby/Pre-Game UI
 - [ ] Player count display
-- [ ] Countdown timer
-- [ ] Game rules/instructions
+- [ ] Countdown timer per hole and a total round timer
+- [ ] Game rules/instructions - special rules screen at start of game that all players must accept before beginning
 - [ ] Team roster
 - [ ] Map preview
-- [ ] Other: ___________
+- [ ] Other: Starting Gear
 
 ### In-Game HUD
-- [ ] **Score Display:** [Location and format]
-- [ ] **Timer:** [Location and format]
-- [ ] **Objective Markers:** [How objectives are shown]
-- [ ] **Team Indicators:** [How teams are identified]
+- [ ] **Score Display:** Scores are shown on the score screen and in the HUD
+- [ ] **Timer:** Timers per hole
+- [ ] **Objective Markers:** Holes are indicated
+- [ ] **Team Indicators:** Identified by color for now
 - [ ] **Progress Bars:** [For captures/objectives]
-- [ ] **Minimap Markers:** [What's shown on minimap]
-- [ ] **Custom HUD Element 1:** [Description]
-- [ ] **Custom HUD Element 2:** [Description]
+- [ ] **Minimap Markers:** Teeboxes, Greens/pins
+- [ ] **Custom HUD Element 1:** Shot Strength
+- [ ] **Custom HUD Element 2:** Shot Direction/Spin/Launch Angle
 
 ### Messages & Notifications
 | Event | Message/Notification |
@@ -308,7 +309,7 @@
 | [Custom Object] | [ID] | [Description] |
 
 ### Performance Considerations
-- [ ] Expected player count: [Number]
+- [ ] Expected player count: [32]
 - [ ] Update frequency requirements
 - [ ] UI complexity level
 - [ ] VFX/particle usage
@@ -319,14 +320,13 @@
 ## 🚧 Known Issues & Limitations
 
 ### Current Limitations
-1. [Limitation 1]
-2. [Limitation 2]
-3. [Limitation 3]
+1. No networking in SDK so we have to get around career persistence with "passcodes" (consider qr codes?)
+2. Animations are limited by the game
+3. Map design is additive in the sdk so we can only build on existing levels.
 
 ### Planned Features
-1. [Feature 1]
-2. [Feature 2]
-3. [Feature 3]
+1. Tournament modes
+2. Skins Game
 
 ### Known Bugs
 1. [Bug 1] - [Severity: Low/Medium/High]
@@ -362,26 +362,11 @@
 - Development Checklist: `common_checklist.md`
 - Template Code: `template.ts`
 
-### External References
-- [Link 1]: [Description]
-- [Link 2]: [Description]
-- [Link 3]: [Description]
-
 ---
 
 ## 📞 Contact & Support
 
-**Developer Contact:** [Your contact info]  
-**Last Updated:** [Date]  
-**Version:** [Version number]
-
----
-
-**💡 Tips for filling out this brief:**
-1. Be as specific as possible - vague descriptions lead to confusion
-2. Update this document as your design evolves
-3. Share with playtesters to gather feedback
-4. Use this as a reference during development
-5. Keep technical details (object IDs, etc.) up to date
-6. Remove sections that don't apply to your mode
-7. Add custom sections as needed for your unique mechanics
+**Developer Contact:** CompewterTutor CompewterTutor@gmail.com 
+**Submit issues to** https://github.com/compewtertutor/mortargolf
+**Last Updated:** 10/17/25
+**Version:** 0.1.1

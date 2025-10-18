@@ -1,0 +1,15 @@
+{
+  "name": "mortargolf",
+  "version": "1.0.0",
+  "description": "MortarGolf - Battlefield 6 Portal game mode with modular build system",
+  "scripts": {
+    "build": "node tools/build-mod.js build.config.json",
+    "watch": "node tools/watch-mod.js build.config.json",
+    "clean": "node tools/clean-builds.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "20.6.0",
+    "chokidar": "^3.6.0"
+  }
+}
