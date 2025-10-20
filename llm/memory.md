@@ -2,23 +2,73 @@
 
 **Project**: MortarGolf - Golf with Mortars Game Mode  
 **Started**: October 17, 2025  
-**Current Phase**: Phase 2 - Core Game Systems (In Progress)  
-**Status**: Phase 2.3 Complete ✅ - State Management System
+**Current Phase**: Phase 3 - Golf Course System (In Progress)  
+**Status**: Phase 3.1 Complete ✅ - Hole Configuration
 
 ---
 
 ## Current State
 
 ### What We're Working On
-- **Phase 2.3 Complete** ✅: State Management System
-  - ✅ Complete state machine with transition validation
-  - ✅ State-specific update loops
-  - ✅ Timer system for all game phases
-  - ✅ Pause/resume functionality
-  - ✅ Event handler integration
-  - **Next**: Moving to Phase 3 (Golf Course System) or UI improvements
+- **Phase 3.1 Complete** ✅: Hole Configuration
+  - ✅ Complete 9-hole course designed for Firestorm map
+  - ✅ Course data structure with all hole information
+  - ✅ Course management module with validation and helpers
+  - **Next**: Phase 3.2 (Course Objects - area triggers, markers, physical setup in Godot)
 
-### Recently Completed (October 17, 2025 - Night Session)
+### Recently Completed (October 20, 2025 - Session)
+
+**Version 0.0.6 - Golf Course Configuration** ✅
+
+1. ✅ **9-Hole Course Layout** (`src/constants.ts`):
+   - Complete `COURSE_HOLES` array with all 9 holes
+   - Each hole includes: number, par, distance, tee position, green position, green radius, fairway width, hazards, name
+   - Course variety:
+     - Par 3s: Holes 3, 6, 8 (short precision holes)
+     - Par 4s: Holes 1, 2, 4, 7 (medium strategic holes)  
+     - Par 5s: Holes 5, 9 (long risk/reward holes)
+   - Total Par: 36, Total Distance: 1815m
+   - Hazard types: rough, sand, destructible obstacles
+   - Named holes for flavor ("The Opening Drive", "Dogleg Danger", "Island Green", etc.)
+   - Placeholder coordinates to be updated with actual Godot trigger positions
+
+2. ✅ **Course Management Module** (`src/course.ts`):
+   - `initializeCourse()`: Validates course data on game start
+     - Checks hole count matches totalHoles
+     - Validates hole numbers are sequential
+     - Validates hole data structure (par, distance, positions, etc.)
+     - Logs course statistics
+   - Hole data retrieval:
+     - `getCourseHole(holeNumber)`: Get specific hole (1-9)
+     - `getCurrentHole()`: Get current hole from game state
+     - `getAllHoles()`, `getFirstHole()`, `getLastHole()`: Accessors
+   - Hole navigation:
+     - `getNextHoleNumber()`, `getPreviousHoleNumber()`: Navigate holes
+     - `validateHoleNumber()`: Check valid range
+     - `isFirstHole()`, `isLastHole()`, `isCourseComplete()`: Status checks
+   - Course statistics:
+     - `getTotalParForRange()`, `getTotalDistanceForRange()`: Range calculations
+     - `getCourseDifficulty()`: Average par
+     - `getHolesByPar()`: Find holes by par value
+   - Formatting helpers:
+     - `formatHoleName()`: "Hole 1 - Par 4 - The Opening Drive"
+     - `formatHoleInfo()`: "Hole 1: Par 4, 180m"
+     - `getCourseProgress()`: Percentage complete
+     - `getHolesRemaining()`: Count remaining holes
+
+3. ✅ **State Management Enhancement** (`src/state.ts`):
+   - Added `getCurrentHoleNumber()` getter function
+   - Maintains encapsulation while allowing course module access
+
+4. ✅ **Build System Update**:
+   - Added `course.ts` to build pipeline
+   - Successful compilation to 4106 lines (up from 3590)
+   - No TypeScript errors
+
+5. ✅ **Version Bump**: 0.0.5 → 0.0.6 using automated script
+6. ✅ **Documentation Updates**: CHANGELOG.md, memory.md, todo.md updated
+
+### Previous Session (October 17, 2025 - Night)
 
 **Version 0.0.5 - State Management System** ✅
 

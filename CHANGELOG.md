@@ -5,6 +5,64 @@ All notable changes to the MortarGolf project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.6] - 2025-10-20
+
+### Added
+- **9-Hole Course Configuration** (`constants.ts`): Complete Firestorm golf course layout
+  - `COURSE_HOLES` array with all 9 holes fully defined
+  - Hole 1: Par 4, 180m - "The Opening Drive" (gentle start, wide fairway)
+  - Hole 2: Par 4, 200m - "Dogleg Danger" (slight dogleg right with obstacles)
+  - Hole 3: Par 3, 120m - "Island Green" (short precision shot over hazards)
+  - Hole 4: Par 4, 210m - "High Ground" (open but elevated green)
+  - Hole 5: Par 5, 280m - "The Gauntlet" (long hole with multiple hazards)
+  - Hole 6: Par 3, 95m - "Bunker Hell" (very short but heavily guarded)
+  - Hole 7: Par 4, 190m - "Tight Squeeze" (narrow fairway requires accuracy)
+  - Hole 8: Par 3, 140m - "The Drop" (mid-range par 3, elevated tee)
+  - Hole 9: Par 5, 300m - "Championship Finish" (dramatic finishing hole)
+  - Total Par: 36, Total Distance: 1815m
+  - Each hole includes: tee position, green position, par, distance, fairway width, green radius, hazards
+  - Hazard types: rough, sand, destructible obstacles
+  - Course statistics constants: total par, total distance, par breakdown
+
+- **Course Management Module** (`course.ts`): Comprehensive course handling system
+  - `initializeCourse()`: Validates and initializes course data on game start
+  - `getCourseHole(holeNumber)`: Retrieve specific hole data by number (1-9)
+  - `getCurrentHole()`: Get current hole data based on game state
+  - `getAllHoles()`, `getFirstHole()`, `getLastHole()`: Course data accessors
+  - `getNextHoleNumber()`, `getPreviousHoleNumber()`: Hole navigation helpers
+  - `validateHoleNumber()`: Validate hole number is in range
+  - `isFirstHole()`, `isLastHole()`, `isCourseComplete()`: Hole status checks
+  - `getTotalParForRange()`, `getTotalDistanceForRange()`: Range statistics
+  - `getCourseDifficulty()`: Calculate average par across all holes
+  - `getHolesByPar()`: Find holes by par value (3, 4, or 5)
+  - `formatHoleName()`, `formatHoleInfo()`: Formatted hole descriptions
+  - `getCourseProgress()`, `getHolesRemaining()`: Progress tracking utilities
+  - Full validation of hole data structure on initialization
+
+### Changed
+- **State Management** (`state.ts`): Added `getCurrentHoleNumber()` getter function
+  - Allows course module to access current hole number
+  - Maintains encapsulation of state variables
+
+- **Build Configuration**: Added `course.ts` to build pipeline
+  - Course module now included in compilation
+  - Build output increased to 4106 lines (from 3590)
+
+### Technical
+- Phase 3.1 complete (Hole Configuration) ✅
+- Complete 9-hole course designed for Firestorm map
+- Course coordinates are placeholders to be updated with actual Godot trigger positions
+- All holes validated with realistic par, distance, and hazard configurations
+- Foundation ready for Phase 3.2 (Course Objects - area triggers, markers)
+- Next: Create actual area triggers in Godot and update coordinates
+
+### Architecture Notes
+- Course data is immutable (const array) for performance
+- Validation runs at initialization to catch configuration errors early
+- Hole numbers are 1-based for player-facing display (converted internally)
+- Course module provides comprehensive helper functions for all hole-related queries
+- Designed for future expansion: easy to add more courses/holes
+
 ## [0.0.5] - 2025-10-17
 
 ### Added

@@ -83,6 +83,10 @@ export function decrementMessageTime() {
 
 // Golf-specific state setters
 
+export function getCurrentHoleNumber(): number {
+    return currentHoleNumber;
+}
+
 export function setCurrentHoleNumber(hole: number) {
     currentHoleNumber = hole;
 }

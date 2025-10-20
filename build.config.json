@@ -10,6 +10,7 @@
     "constants.ts",
     "state.ts",
     "statemachine.ts",
+    "course.ts",
     "helpers.ts",
     "ui.ts",
     "player.ts",

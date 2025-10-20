@@ -1,9 +1,9 @@
 # MortarGolf Development Todo List
 
 **Project**: MortarGolf - Golf with Mortars Game Mode for BF6 Portal  
-**Version**: 0.0.5
-**Last Updated**: October 17, 2025
-**Status**: Phase 2.1 Complete ✅ - Beginning Phase 2.2
+**Version**: 0.0.6
+**Last Updated**: October 20, 2025
+**Status**: Phase 3.1 Complete ✅ - Beginning Phase 3.2
 
 ---
 
@@ -84,15 +84,18 @@
 
 ## Phase 3: Golf Course System
 
-### 3.1 Hole Configuration
-- [ ] Design 9-hole course layout on Firestorm map
-- [ ] Define tee box locations for each hole
-- [ ] Define green/pin locations for each hole
-- [ ] Set par values for each hole
-- [ ] Calculate distances for each hole
-- [ ] Identify fairway boundaries
-- [ ] Mark rough areas and effects
-- [ ] Place hazard locations
+### 3.1 Hole Configuration ✅ COMPLETE
+- [x] Design 9-hole course layout on Firestorm map
+- [x] Define tee box locations for each hole
+- [x] Define green/pin locations for each hole
+- [x] Set par values for each hole
+- [x] Calculate distances for each hole
+- [x] Identify fairway boundaries
+- [x] Mark rough areas and effects
+- [x] Place hazard locations
+- [x] Create course management module (course.ts)
+- [x] Add course validation and initialization
+- [x] Create helper functions for hole navigation and statistics
 
 ### 3.2 Course Objects
 - [ ] Create tee box area triggers
@@ -942,4 +945,4 @@
 - Test frequently at each milestone
 - Balance fun vs. realism
 
-**Last Updated**: October 17, 2025
+**Last Updated**: October 20, 2025

@@ -4,11 +4,13 @@
  * All game configuration constants, IDs, timings, colors, and vectors.
  */
 
+import { HoleData } from './types';
+
 ///////////////////////////////////////////////////////////////////////////////
 // VERSION & DEBUG FLAGS
 ///////////////////////////////////////////////////////////////////////////////
 
-export const VERSION = [0, 0, 5]; // [major, minor, patch]
+export const VERSION = [0, 0, 6]; // [major, minor, patch]
 export const debugJSPlayer = true;
 export const debugMode = true; // DISABLE BEFORE SHARING
 
@@ -28,6 +30,181 @@ export const combatStartDelaySeconds: number = 30;
 
 export const totalHoles: number = 9;           // 9-hole course
 export const defaultPar: number = 4;           // Default par if not specified
+
+/**
+ * FIRESTORM GOLF COURSE - 9 Holes
+ * 
+ * A challenging 9-hole course designed around the Firestorm map.
+ * 
+ * Course Layout:
+ * - Par 3s: Holes 3, 6, 8 (short, precision holes)
+ * - Par 4s: Holes 1, 2, 4, 7 (medium, strategic holes)
+ * - Par 5s: Holes 5, 9 (long, risk/reward holes)
+ * Total Par: 36
+ * 
+ * NOTE: Coordinates are placeholders and will be updated once the Godot
+ * level is created with actual trigger placements. These represent approximate
+ * positions across the Firestorm map to create varied hole layouts.
+ */
+export const COURSE_HOLES: HoleData[] = [
+    // Hole 1: Par 4, 180m - Gentle start, wide fairway
+    {
+        number: 1,
+        par: 4,
+        distance: 180,
+        teePosition: mod.CreateVector(100, 100, 50),
+        greenPosition: mod.CreateVector(280, 100, 52),
+        greenRadius: 15,
+        fairwayWidth: 40,
+        hazards: [
+            { type: 'rough', position: mod.CreateVector(190, 80, 50), radius: 20 },
+            { type: 'rough', position: mod.CreateVector(190, 120, 50), radius: 20 }
+        ],
+        name: "The Opening Drive"
+    },
+    
+    // Hole 2: Par 4, 200m - Slight dogleg right with obstacles
+    {
+        number: 2,
+        par: 4,
+        distance: 200,
+        teePosition: mod.CreateVector(300, 110, 52),
+        greenPosition: mod.CreateVector(450, 200, 55),
+        greenRadius: 15,
+        fairwayWidth: 35,
+        hazards: [
+            { type: 'destructible', position: mod.CreateVector(375, 155, 53), radius: 10 },
+            { type: 'rough', position: mod.CreateVector(420, 180, 54), radius: 25 }
+        ],
+        name: "Dogleg Danger"
+    },
+    
+    // Hole 3: Par 3, 120m - Short precision shot over hazards
+    {
+        number: 3,
+        par: 3,
+        distance: 120,
+        teePosition: mod.CreateVector(470, 220, 55),
+        greenPosition: mod.CreateVector(590, 220, 58),
+        greenRadius: 12,
+        fairwayWidth: 25,
+        hazards: [
+            { type: 'sand', position: mod.CreateVector(530, 210, 56), radius: 15 },
+            { type: 'sand', position: mod.CreateVector(530, 230, 56), radius: 15 },
+            { type: 'rough', position: mod.CreateVector(580, 205, 57), radius: 10 }
+        ],
+        name: "Island Green"
+    },
+    
+    // Hole 4: Par 4, 210m - Open but elevated green
+    {
+        number: 4,
+        par: 4,
+        distance: 210,
+        teePosition: mod.CreateVector(610, 230, 58),
+        greenPosition: mod.CreateVector(750, 350, 70),
+        greenRadius: 15,
+        fairwayWidth: 40,
+        hazards: [
+            { type: 'destructible', position: mod.CreateVector(680, 290, 64), radius: 12 },
+            { type: 'rough', position: mod.CreateVector(730, 330, 68), radius: 20 }
+        ],
+        name: "High Ground"
+    },
+    
+    // Hole 5: Par 5, 280m - Long hole with multiple hazards (risk/reward)
+    {
+        number: 5,
+        par: 5,
+        distance: 280,
+        teePosition: mod.CreateVector(770, 370, 70),
+        greenPosition: mod.CreateVector(900, 620, 65),
+        greenRadius: 18,
+        fairwayWidth: 45,
+        hazards: [
+            { type: 'destructible', position: mod.CreateVector(835, 495, 68), radius: 15 },
+            { type: 'rough', position: mod.CreateVector(870, 570, 66), radius: 30 },
+            { type: 'sand', position: mod.CreateVector(890, 600, 65), radius: 18 }
+        ],
+        name: "The Gauntlet"
+    },
+    
+    // Hole 6: Par 3, 95m - Very short but heavily guarded
+    {
+        number: 6,
+        par: 3,
+        distance: 95,
+        teePosition: mod.CreateVector(920, 640, 65),
+        greenPosition: mod.CreateVector(1015, 640, 68),
+        greenRadius: 10,
+        fairwayWidth: 20,
+        hazards: [
+            { type: 'sand', position: mod.CreateVector(970, 630, 66), radius: 12 },
+            { type: 'sand', position: mod.CreateVector(970, 650, 66), radius: 12 },
+            { type: 'sand', position: mod.CreateVector(1005, 625, 67), radius: 10 },
+            { type: 'sand', position: mod.CreateVector(1005, 655, 67), radius: 10 }
+        ],
+        name: "Bunker Hell"
+    },
+    
+    // Hole 7: Par 4, 190m - Narrow fairway requires accuracy
+    {
+        number: 7,
+        par: 4,
+        distance: 190,
+        teePosition: mod.CreateVector(1030, 650, 68),
+        greenPosition: mod.CreateVector(1180, 750, 62),
+        greenRadius: 14,
+        fairwayWidth: 28,
+        hazards: [
+            { type: 'rough', position: mod.CreateVector(1105, 685, 65), radius: 25 },
+            { type: 'rough', position: mod.CreateVector(1105, 715, 65), radius: 25 },
+            { type: 'destructible', position: mod.CreateVector(1155, 735, 63), radius: 10 }
+        ],
+        name: "Tight Squeeze"
+    },
+    
+    // Hole 8: Par 3, 140m - Mid-range par 3, elevated tee
+    {
+        number: 8,
+        par: 3,
+        distance: 140,
+        teePosition: mod.CreateVector(1200, 770, 75),
+        greenPosition: mod.CreateVector(1330, 810, 60),
+        greenRadius: 13,
+        fairwayWidth: 30,
+        hazards: [
+            { type: 'rough', position: mod.CreateVector(1265, 790, 68), radius: 20 },
+            { type: 'sand', position: mod.CreateVector(1315, 800, 61), radius: 15 }
+        ],
+        name: "The Drop"
+    },
+    
+    // Hole 9: Par 5, 300m - Dramatic finishing hole, longest on course
+    {
+        number: 9,
+        par: 5,
+        distance: 300,
+        teePosition: mod.CreateVector(1350, 820, 60),
+        greenPosition: mod.CreateVector(1550, 520, 58),
+        greenRadius: 20,
+        fairwayWidth: 50,
+        hazards: [
+            { type: 'destructible', position: mod.CreateVector(1450, 670, 59), radius: 18 },
+            { type: 'rough', position: mod.CreateVector(1500, 590, 58), radius: 35 },
+            { type: 'sand', position: mod.CreateVector(1535, 510, 58), radius: 20 },
+            { type: 'sand', position: mod.CreateVector(1535, 530, 58), radius: 20 }
+        ],
+        name: "Championship Finish"
+    }
+];
+
+// Course statistics
+export const COURSE_TOTAL_PAR: number = 36;        // Sum of all pars
+export const COURSE_TOTAL_DISTANCE: number = 1815; // Sum of all distances
+export const COURSE_PAR_3_COUNT: number = 3;       // Holes 3, 6, 8
+export const COURSE_PAR_4_COUNT: number = 4;       // Holes 1, 2, 4, 7
+export const COURSE_PAR_5_COUNT: number = 2;       // Holes 5, 9
 
 ///////////////////////////////////////////////////////////////////////////////
 // GOLF SCORING CONSTANTS
