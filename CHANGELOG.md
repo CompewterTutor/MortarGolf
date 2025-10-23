@@ -5,6 +5,45 @@ All notable changes to the MortarGolf project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2025-10-23
+
+### Added
+- **Course Objects Management** (`courseobjects.ts`): Complete course object system with 650+ lines
+  - CourseObjectIDs constants for trigger/object ID ranges (1000-1999)
+  - Area trigger management functions (getAreaTrigger, setAreaTriggerEnabled)
+  - Pin marker management (getPinMarker, setPinMarkerVisible)
+  - Distance marker generation system (50m, 100m, 150m, 200m intervals)
+  - Hazard object management with interaction setup
+  - Visual element management for course decoration
+  - Course initialization and validation functions
+
+- **Area Trigger Event Handlers** (`events.ts`): Enhanced zone detection and player state management
+  - Zone identification system for tee, green, fairway, rough, out-of-bounds
+  - Zone-specific handling functions with automatic hole phase transitions
+  - Lie type management (fairway, rough) using setLie() method
+  - Out of bounds penalty system (+1 stroke)
+  - Integration with existing GolfPlayer state management
+
+- **Localization Support**: Added area trigger notification strings
+  - teeBoxEntry: "Hole {} - Tee Box. Take your shot!"
+  - greenEntry: "On the green! Switch to putting mode."
+  - roughEntry: "In the rough! Shot difficulty increased."
+  - outOfBoundsEntry: "Out of Bounds! +1 stroke penalty."
+
+### Changed
+- **Build System**: Added courseobjects.ts to build.config.json
+- **Code Size**: Increased from 4755 to 4978 total lines (+223 lines)
+
+### Fixed
+- **Import Resolution**: Fixed missing imports for HolePhase enum and getCurrentHoleNumber function
+- **Type Safety**: Corrected enum usage for HolePhase values (Teeoff, Fairway, Putting)
+- **Property Access**: Fixed lieType property access to use setLie() method instead
+
+### Technical
+- **Phase 3.2 Complete**: Course Objects implementation with full area trigger support
+- **Event Integration**: Successfully integrated course object system with BF6 Portal SDK events
+- **State Management**: Automatic player state transitions based on zone detection
+
 ## [0.0.6] - 2025-10-20
 
 ### Added

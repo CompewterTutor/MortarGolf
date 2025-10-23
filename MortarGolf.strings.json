@@ -50,5 +50,10 @@
     "teamRed": "Red Team",
     "teamBlue": "Blue Team", 
     "teamGreen": "Green Team",
-    "teamYellow": "Yellow Team"
+    "teamYellow": "Yellow Team",
+    
+    "teeBoxEntry": "Hole {} - Tee Box. Take your shot!",
+    "greenEntry": "On the green! Switch to putting mode.",
+    "roughEntry": "In the rough! Shot difficulty increased.",
+    "outOfBoundsEntry": "Out of Bounds! +1 stroke penalty."
 }

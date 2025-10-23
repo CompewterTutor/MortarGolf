@@ -1,6 +1,6 @@
 # ⛳ MortarGolf - Battlefield 6 Portal Game Mode
 
-[![Version](https://img.shields.io/badge/version-0.0.6-blue.svg)](https://github.com/compewtertutor/mortargolf)
+[![Version](https://img.shields.io/badge/version-0.0.7-blue.svg)](https://github.com/compewtertutor/mortargolf)
 [![Status](https://img.shields.io/badge/status-in%20development-yellow.svg)](https://github.com/compewtertutor/mortargolf)
 [![BF6 Portal](https://img.shields.io/badge/BF6-Portal-orange.svg)](https://github.com/compewtertutor/mortargolf)
 
@@ -407,4 +407,4 @@ Ready to tee off? Find a MortarGolf server in Battlefield 6 Portal and start you
 ---
 
 *Last Updated: October 17, 2025*
-*Version: 0.0.6*
+*Version: 0.0.7*

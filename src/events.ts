@@ -19,7 +19,10 @@ import { CombatCountdown } from './gameflow';
 import { TickUpdate, ThrottledUpdate } from './updates';
 import * as stateMachine from './statemachine';
 import { MatchmakingQueue } from './matchmaking';
-import { PlayerRole } from './types';
+import { PlayerRole, HolePhase } from './types';
+import { initializeCourseObjects } from './courseobjects';
+import { initializeCourse } from './course';
+import { getCurrentHoleNumber } from './state';
 
 ///////////////////////////////////////////////////////////////////////////////
 // EXPORTED EVENT HANDLERS
@@ -34,19 +37,25 @@ export async function OnGameModeStarted(): Promise<void> {
     // 1. Initialize state machine
     stateMachine.initializeStateMachine();
     
-    // 2. Configure game settings
+    // 2. Initialize course system
+    initializeCourse();
+    
+    // 3. Initialize course objects
+    initializeCourseObjects();
+    
+    // 4. Configure game settings
     mod.SetFriendlyFire(false);
     mod.SetSpawnMode(mod.SpawnModes.AutoSpawn);
     
-    // 3. Setup game objects (HQs, objectives, etc.)
+    // 5. Setup game objects (HQs, objectives, etc.)
     let mainHQ = mod.GetHQ(mainHQID);
     mod.EnableHQ(mainHQ, true);
     
-    // 4. Begin update loops (these run continuously)
+    // 6. Begin update loops (these run continuously)
     TickUpdate();
     ThrottledUpdate();
     
-    // 5. Display welcome message
+    // 7. Display welcome message
     mod.DisplayHighlightedWorldLogMessage(
         mod.Message("welcomeMessage")
     );
@@ -258,17 +267,36 @@ export function OnPlayerEnterAreaTrigger(
     eventPlayer: mod.Player,
     eventAreaTrigger: mod.AreaTrigger
 ): void {
-    let id = mod.GetObjId(eventAreaTrigger);
     let golfPlayer = GolfPlayer.get(eventPlayer);
     if (!golfPlayer) return;
     
-    // Handle area trigger entry based on type
-    // - Tee box: Start hole
-    // - Green: Switch to putting mode
-    // - Out of bounds: Apply penalty
-    // - Shop: Open shop UI
+    // Get the trigger ID to identify which zone was entered
+    const triggerId = mod.GetObjId(eventAreaTrigger);
     
-    console.log("Player entered area trigger:", id);
+    // Determine which hole and zone type this trigger belongs to
+    const zoneInfo = identifyTriggerZone(triggerId);
+    if (!zoneInfo) return;
+    
+    console.log(`Player ${mod.GetPlayerName(eventPlayer)} entered ${zoneInfo.zoneType} on hole ${zoneInfo.holeNumber}`);
+    
+    // Handle zone-specific logic
+    switch (zoneInfo.zoneType) {
+        case 'tee':
+            handleTeeBoxEntry(golfPlayer, zoneInfo.holeNumber);
+            break;
+        case 'green':
+            handleGreenEntry(golfPlayer, zoneInfo.holeNumber);
+            break;
+        case 'fairway':
+            handleFairwayEntry(golfPlayer, zoneInfo.holeNumber);
+            break;
+        case 'rough':
+            handleRoughEntry(golfPlayer, zoneInfo.holeNumber);
+            break;
+        case 'oob':
+            handleOutOfBoundsEntry(golfPlayer, zoneInfo.holeNumber);
+            break;
+    }
 }
 
 /**
@@ -278,10 +306,36 @@ export function OnPlayerExitAreaTrigger(
     eventPlayer: mod.Player,
     eventAreaTrigger: mod.AreaTrigger
 ): void {
-    let id = mod.GetObjId(eventAreaTrigger);
+    let golfPlayer = GolfPlayer.get(eventPlayer);
+    if (!golfPlayer) return;
     
-    // Handle area trigger exit
-    console.log("Player exited area trigger:", id);
+    // Get the trigger ID to identify which zone was exited
+    const triggerId = mod.GetObjId(eventAreaTrigger);
+    
+    // Determine which hole and zone type this trigger belongs to
+    const zoneInfo = identifyTriggerZone(triggerId);
+    if (!zoneInfo) return;
+    
+    console.log(`Player ${mod.GetPlayerName(eventPlayer)} exited ${zoneInfo.zoneType} on hole ${zoneInfo.holeNumber}`);
+    
+    // Handle zone-specific exit logic
+    switch (zoneInfo.zoneType) {
+        case 'tee':
+            handleTeeBoxExit(golfPlayer, zoneInfo.holeNumber);
+            break;
+        case 'green':
+            handleGreenExit(golfPlayer, zoneInfo.holeNumber);
+            break;
+        case 'fairway':
+            handleFairwayExit(golfPlayer, zoneInfo.holeNumber);
+            break;
+        case 'rough':
+            handleRoughExit(golfPlayer, zoneInfo.holeNumber);
+            break;
+        case 'oob':
+            handleOutOfBoundsExit(golfPlayer, zoneInfo.holeNumber);
+            break;
+    }
 }
 
 /**
@@ -358,4 +412,186 @@ export function OnPlayerUIButtonEvent(
     // - Menu navigation
     // - Club selection
     // - Shot confirmation
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// AREA TRIGGER EVENT HANDLERS
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// ZONE HANDLING FUNCTIONS
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Identify which hole and zone type a trigger belongs to
+ */
+interface TriggerZoneInfo {
+    holeNumber: number;
+    zoneType: 'tee' | 'green' | 'fairway' | 'rough' | 'oob';
+}
+
+function identifyTriggerZone(triggerId: number): TriggerZoneInfo | null {
+    // Check if this trigger belongs to a hole zone
+    if (triggerId >= 1000 && triggerId <= 1045) {
+        // Calculate hole number (1-9)
+        const holeNumber = Math.floor((triggerId - 1000) % 10) + 1;
+        
+        // Determine zone type based on ID range
+        if (triggerId >= 1000 && triggerId <= 1008) {
+            return { holeNumber, zoneType: 'tee' };
+        } else if (triggerId >= 1010 && triggerId <= 1018) {
+            return { holeNumber, zoneType: 'green' };
+        } else if (triggerId >= 1019 && triggerId <= 1027) {
+            return { holeNumber, zoneType: 'fairway' };
+        } else if (triggerId >= 1028 && triggerId <= 1036) {
+            return { holeNumber, zoneType: 'rough' };
+        } else if (triggerId >= 1037 && triggerId <= 1045) {
+            return { holeNumber, zoneType: 'oob' };
+        }
+    }
+    
+    return null;
+}
+
+/**
+ * Handle player entering tee box
+ */
+function handleTeeBoxEntry(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Check if this is the current hole
+    const currentHole = getCurrentHoleNumber();
+    if (holeNumber !== currentHole) return;
+    
+    // Set player's current hole if not already set
+    if (golfPlayer.currentHole !== holeNumber) {
+        golfPlayer.currentHole = holeNumber;
+    }
+    
+    // Set player to teeoff phase if they're on the correct hole
+    if (golfPlayer.holePhase === HolePhase.Teeoff || !golfPlayer.holePhase) {
+        golfPlayer.holePhase = HolePhase.Teeoff;
+        
+        // Show notification
+        mod.DisplayNotificationMessage(
+            mod.Message("teeBoxEntry", holeNumber),
+            golfPlayer.player
+        );
+    }
+}
+
+/**
+ * Handle player exiting tee box
+ */
+function handleTeeBoxExit(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Player has left the tee box, likely after taking their shot
+    if (golfPlayer.holePhase === HolePhase.Teeoff) {
+        golfPlayer.holePhase = HolePhase.Fairway;
+    }
+}
+
+/**
+ * Handle player entering green
+ */
+function handleGreenEntry(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Check if this is the current hole
+    const currentHole = getCurrentHoleNumber();
+    if (holeNumber !== currentHole) return;
+    
+    // Set player to putting phase
+    golfPlayer.holePhase = HolePhase.Putting;
+    
+    // Show putting notification
+    mod.DisplayNotificationMessage(
+        mod.Message("greenEntry"),
+        golfPlayer.player
+    );
+    
+    // Enable putting UI/mode
+    // TODO: Implement putting mode setup
+}
+
+/**
+ * Handle player exiting green
+ */
+function handleGreenExit(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Player left the green (maybe to retrieve ball)
+    if (golfPlayer.holePhase === HolePhase.Putting) {
+        golfPlayer.holePhase = HolePhase.Fairway;
+    }
+}
+
+/**
+ * Handle player entering fairway
+ */
+function handleFairwayEntry(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Check if this is the current hole
+    const currentHole = getCurrentHoleNumber();
+    if (holeNumber !== currentHole) return;
+    
+    // Set player to fairway phase if coming from tee
+    if (golfPlayer.holePhase === HolePhase.Teeoff) {
+        golfPlayer.holePhase = HolePhase.Fairway;
+    }
+    
+    // Update lie type to fairway
+    golfPlayer.setLie('fairway');
+}
+
+/**
+ * Handle player exiting fairway
+ */
+function handleFairwayExit(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Lie type will be updated by the next zone entry
+}
+
+/**
+ * Handle player entering rough
+ */
+function handleRoughEntry(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Check if this is the current hole
+    const currentHole = getCurrentHoleNumber();
+    if (holeNumber !== currentHole) return;
+    
+    // Update lie type to rough
+    golfPlayer.setLie('rough');
+    
+    // Show rough notification
+    mod.DisplayNotificationMessage(
+        mod.Message("roughEntry"),
+        golfPlayer.player
+    );
+}
+
+/**
+ * Handle player exiting rough
+ */
+function handleRoughExit(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Lie type will be updated by the next zone entry
+}
+
+/**
+ * Handle player entering out of bounds
+ */
+function handleOutOfBoundsEntry(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Check if this is the current hole
+    const currentHole = getCurrentHoleNumber();
+    if (holeNumber !== currentHole) return;
+    
+    // Apply out of bounds penalty
+    golfPlayer.strokes++; // Add penalty stroke
+    
+    // Show out of bounds notification
+    mod.DisplayNotificationMessage(
+        mod.Message("outOfBoundsEntry"),
+        golfPlayer.player
+    );
+    
+    // Reset player to previous position or tee box
+    // TODO: Implement position reset logic
+}
+
+/**
+ * Handle player exiting out of bounds
+ */
+function handleOutOfBoundsExit(golfPlayer: GolfPlayer, holeNumber: number): void {
+    // Player has been brought back in bounds
 }
