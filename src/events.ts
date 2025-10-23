@@ -22,6 +22,7 @@ import { MatchmakingQueue } from './matchmaking';
 import { PlayerRole, HolePhase } from './types';
 import { initializeCourseObjects } from './courseobjects';
 import { initializeCourse } from './course';
+import { initializeHazardSystem, updateHazardSystem, cleanupHazardSystem } from './hazards';
 import { getCurrentHoleNumber } from './state';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,6 +43,9 @@ export async function OnGameModeStarted(): Promise<void> {
     
     // 3. Initialize course objects
     initializeCourseObjects();
+    
+    // 4. Initialize hazard system for first hole
+    initializeHazardSystem(1);
     
     // 4. Configure game settings
     mod.SetFriendlyFire(false);
@@ -69,6 +73,10 @@ export async function OnGameModeStarted(): Promise<void> {
 export function OnGameModeEnding(): void {
     setGameOver(true);
     HideAllMessageUI();
+    
+    // Clean up hazard system
+    cleanupHazardSystem();
+    
     console.log("Game Mode Ending");
 }
 

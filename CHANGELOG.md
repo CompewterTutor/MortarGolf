@@ -5,6 +5,34 @@ All notable changes to the MortarGolf project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.8] - 2025-10-23
+
+### Added
+- **Hazard System** (`hazards.ts`): Complete hazard management system with 662 lines
+  - HazardType enum (DESTRUCTIBLE, WATER, SAND, ROUGH, SMOKE, FIRE, ELECTRIC)
+  - DestructibleType enum with properties (health, explosion radius, respawn times)
+  - WindData interface and wind system (initializeWind, updateWind, calculateWindEffect)
+  - Obstacle randomization (randomizeHoleHazards, generateRandomPosition)
+  - Penalty system (calculateHazardPenalty, getHazardDifficultyMultiplier)
+  - Destructible management (spawnDestructibleObstacles, damageDestructible, updateDestructibles)
+  - Complete lifecycle management (spawn, update, cleanup)
+
+- **Hazard System Integration**: Full integration with existing game flow
+  - Added hazard system initialization to OnGameModeStarted event
+  - Added hazard system updates to playing state tick loop
+  - Added hazard system cleanup to OnGameModeEnding event
+  - Seamless integration with course and game state systems
+
+### Changed
+- **Build System**: Updated build.config.json to include hazards.ts
+- **Update Loops**: Enhanced updates.ts with hazard system integration
+- **Event System**: Enhanced events.ts with hazard lifecycle management
+
+### Technical
+- **Total Lines**: Increased from 5641 to 5651 lines (+10 lines for integration)
+- **Module Count**: Now 16 source files in the build pipeline
+- **Dependencies**: Hazard system properly integrated with types, constants, state, and course modules
+
 ## [0.0.7] - 2025-10-23
 
 ### Added

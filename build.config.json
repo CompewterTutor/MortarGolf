@@ -12,6 +12,7 @@
     "statemachine.ts",
     "course.ts",
     "courseobjects.ts",
+    "hazards.ts",
     "helpers.ts",
     "ui.ts",
     "player.ts",

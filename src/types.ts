@@ -6,6 +6,7 @@
 
 export type Widget = mod.UIWidget;
 export type Dict = { [key: string]: any };
+export type Vector = mod.Vector;
 
 ///////////////////////////////////////////////////////////////////////////////
 // GAME STATE ENUMS

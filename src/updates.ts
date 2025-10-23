@@ -14,6 +14,7 @@ import { GolfPlayer } from './player';
 import * as stateMachine from './statemachine';
 import { MatchmakingQueue } from './matchmaking';
 import { Foursome } from './foursome';
+import { updateHazardSystem } from './hazards';
 
 ///////////////////////////////////////////////////////////////////////////////
 // FAST UPDATE LOOP (60fps)
@@ -201,6 +202,9 @@ function updatePlayingTick(): void {
     // - Player positions relative to hole
     // - Out of bounds detection
     // - Distance to pin calculations
+    
+    // Update hazard system (fast updates for wind, destructibles, etc.)
+    updateHazardSystem(state.currentHoleNumber);
     
     GolfPlayer.getAllGolfers().forEach(golfPlayer => {
         if (!mod.IsPlayerValid(golfPlayer.player)) return;
