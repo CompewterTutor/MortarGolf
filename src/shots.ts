@@ -7,7 +7,7 @@
  * the interface for players to take shots.
  */
 
-import { ShotData, ClubType, GolfPlayer, HolePhase, GameState, Player, Widget } from './types';
+import { ShotData, ClubType, GolfPlayer, HolePhase, GameState, Player, Widget, Vector } from './types';
 import { 
     DRIVER_DISTANCE, 
     IRON_DISTANCE, 
@@ -17,7 +17,8 @@ import {
     SHOT_METER_SPEED,
     SPIN_MAX_EFFECT,
     MIN_LAUNCH_ANGLE,
-    MAX_LAUNCH_ANGLE
+    MAX_LAUNCH_ANGLE,
+    COURSE_HOLES
 } from './constants';
 import { getCurrentHoleNumber, gameState } from './state';
 import { getCourseHole } from './course';
@@ -501,25 +502,193 @@ function getLieMultiplier(lie: string): number {
     return lieMultipliers[lie] || 1.0;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// MORTAR PROJECTILE SYSTEM
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Active mortar projectiles tracking
+ */
+interface ActiveMortar {
+    id: number;
+    player: Player;
+    startPosition: any;
+    velocity: any;
+    club: ClubType;
+    expectedDistance: number;
+    spin: number;
+    backspin: number;
+    startTime: number;
+    trailVFX?: any;
+    impactDetected: boolean;
+}
+
+const activeMortars = new Map<number, ActiveMortar>();
+let nextMortarId = 1;
+
 /**
  * Spawn mortar projectile with calculated trajectory
  */
 function spawnMortarProjectile(player: Player, trajectory: any): void {
     if (!trajectory) {
+        console.log('[Shots] spawnMortarProjectile: No trajectory provided');
         return;
     }
     
-    // TODO: Implement actual mortar spawning using SDK
-    // This would involve:
-    // 1. Creating mortar entity at player position
-    // 2. Setting initial velocity based on trajectory
-    // 3. Setting up collision detection for landing
-    // 4. Handling impact effects and ball position update
+    console.log(`[Shots] Spawning mortar for ${mod.GetPlayerName(player)} with velocity:`, trajectory.velocity);
     
-    console.log(`[Shots] Spawning mortar with velocity:`, trajectory.velocity);
+    // Create mortar visual projectile
+    const mortarPosition = trajectory.startPosition;
+    const mortarRotation = mod.CreateVector(0, 0, 0); // No initial rotation
+    const mortarScale = mod.CreateVector(0.5, 0.5, 0.5); // Small scale for visibility
     
-    // Placeholder for SDK mortar spawn
-    // mod.SpawnMortar(player, trajectory.startPosition, trajectory.velocity);
+    // Spawn a small object as the mortar projectile (using a simple crate as placeholder)
+    const mortarObject = mod.SpawnObject(
+        mod.RuntimeSpawn_Common.Crate_01_A, // Placeholder object
+        mortarPosition,
+        mortarRotation,
+        mortarScale
+    );
+    
+    // Create trail effect
+    const trailVFX = mod.SpawnObject(
+        mod.RuntimeSpawn_Common.FX_Gadget_DeployableMortar_Projectile_Trail,
+        mortarPosition,
+        mortarRotation,
+        mod.CreateVector(1, 1, 1)
+    );
+    
+    // Create active mortar tracking
+    const mortarId = nextMortarId++;
+    const activeMortar: ActiveMortar = {
+        id: mortarId,
+        player,
+        startPosition: trajectory.startPosition,
+        velocity: trajectory.velocity,
+        club: trajectory.club,
+        expectedDistance: trajectory.expectedDistance,
+        spin: trajectory.spin,
+        backspin: trajectory.backspin,
+        startTime: Date.now(),
+        trailVFX,
+        impactDetected: false
+    };
+    
+    activeMortars.set(mortarId, activeMortar);
+    
+    // Start projectile update loop
+    updateMortarProjectile(activeMortar);
+    
+    console.log(`[Shots] Mortar ${mortarId} spawned successfully`);
+}
+
+/**
+ * Updates mortar projectile physics and handles impact detection
+ */
+function updateMortarProjectile(activeMortar: ActiveMortar): void {
+    const updateInterval = 50; // 20 FPS physics updates
+    const gravity = -9.81;
+    const airResistance = 0.98;
+    const groundLevel = 0; // Simple ground level for now
+    
+    const updateLoop = () => {
+        const currentTime = Date.now();
+        const deltaTime = (currentTime - activeMortar.startTime) / 1000; // Convert to seconds
+        
+        // Calculate current position using physics
+        const time = deltaTime;
+        
+        // Basic projectile motion with gravity
+        let currentX = activeMortar.startPosition.x + activeMortar.velocity.x * time;
+        let currentY = activeMortar.startPosition.y + activeMortar.velocity.y * time;
+        let currentZ = activeMortar.startPosition.z + 
+                      (activeMortar.velocity.z * time) + 
+                      (0.5 * gravity * time * time);
+        
+        // Apply air resistance
+        currentX *= Math.pow(airResistance, time);
+        currentY *= Math.pow(airResistance, time);
+        
+        // Apply spin effects (simple curve)
+        const spinEffect = activeMortar.spin * 10; // Spin affects horizontal movement
+        currentY += spinEffect * Math.sin(time * 2);
+        
+        // Check for ground impact
+        if (currentZ <= groundLevel && !activeMortar.impactDetected) {
+            activeMortar.impactDetected = true;
+            
+            // Create impact effect
+            const impactPosition = {
+                x: currentX,
+                y: currentY,
+                z: groundLevel
+            };
+            
+            mod.SpawnObject(
+                mod.RuntimeSpawn_Common.FX_ArtilleryStrike_Explosion_GS,
+                impactPosition,
+                { x: 0, y: 0, z: 0 },
+                { x: 1, y: 1, z: 1 }
+            );
+            
+            console.log(`[Shots] Mortar ${activeMortar.id} impacted at position:`, impactPosition);
+            
+            // Clean up trail VFX
+            if (activeMortar.trailVFX) {
+                // Note: SDK might have a destroy function, but for now we'll let it expire
+            }
+            
+            // Remove from active mortars
+            activeMortars.delete(activeMortar.id);
+            
+            // Handle shot completion
+            handleShotCompletion(activeMortar.player, impactPosition);
+            return;
+        }
+        
+        // Update mortar visual position if SDK supports it
+        // Note: This would require SDK functions to move spawned objects
+        
+        // Continue updating if still in flight
+        if (!activeMortar.impactDetected) {
+            setTimeout(updateLoop, updateInterval);
+        }
+    };
+    
+    // Start the update loop
+    setTimeout(updateLoop, updateInterval);
+}
+
+/**
+ * Handles shot completion after mortar impact
+ */
+function handleShotCompletion(player: Player, finalPosition: Vector): void {
+    // For now, just log the completion - player state management will be implemented later
+    console.log(`[Shots] Shot completed for ${mod.GetPlayerName(player)}`);
+    console.log(`[Shots] Final position:`, finalPosition);
+    
+    // Calculate distance from hole (using hole 1 as placeholder)
+    const currentHole = COURSE_HOLES[0]; // Placeholder - will use player state later
+    const distanceToHole = Math.sqrt(
+        Math.pow(finalPosition.x - currentHole.greenPosition.x, 2) +
+        Math.pow(finalPosition.y - currentHole.greenPosition.y, 2)
+    );
+    
+    console.log(`[Shots] Shot completed for ${mod.GetPlayerName(player)}`);
+    console.log(`[Shots] Final position:`, finalPosition);
+    console.log(`[Shots] Distance to hole: ${distanceToHole.toFixed(2)}m`);
+    
+    // TODO: Update player state when player state management is implemented
+    // playerState.shotsTaken++;
+    
+    // Check if ball is close enough to hole (within 1m)
+    if (distanceToHole <= 1.0) {
+        console.log(`[Shots] ${mod.GetPlayerName(player)} completed the hole!`);
+        // TODO: Handle hole completion logic
+    } else {
+        console.log(`[Shots] ${mod.GetPlayerName(player)} needs another shot`);
+        // TODO: Setup next shot from final position
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

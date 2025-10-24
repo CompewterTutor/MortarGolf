@@ -5,6 +5,79 @@ All notable changes to the MortarGolf project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2025-10-24
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Technical
+
+## [0.1.2] - 2025-10-24
+
+### Added
+- **Putting System** (`putting.ts`): Complete dart-based putting mechanics (600+ lines)
+  - PuttingPhase enum (NONE, AIMING, CHARGING, THROWING, RESULT) for state management
+  - TargetDifficulty enum (EASY, MEDIUM, HARD, EXPERT) with distance-based scaling
+  - PlayerPuttingState interface for comprehensive player putting state tracking
+  - generatePuttingTarget() with randomized positioning and dynamic difficulty scaling
+  - Dart projectile physics with realistic arc trajectory and precise hit detection
+  - Hole completion logic with automatic next putt setup for missed attempts
+  - Putting timeout system with stroke penalties for time violations
+- **Event Integration**: Seamless integration with existing game flow
+  - Green area detection triggers automatic putting mode activation
+  - Integration with main update loops for continuous timer and physics updates
+  - Proper cleanup and state management when players exit green areas
+- **Localization Support**: Complete putting system messaging (15+ new strings)
+  - puttingModeStarted, puttSuccess, puttMiss, puttTimeout notifications
+  - Power and accuracy indicators, distance measurements, stroke tracking
+  - Target hit feedback with distance-to-hole calculations
+  - Perfect, good, and poor putt result messages with appropriate feedback
+
+### Changed
+- **Build System**: Increased total output lines from 6539 to 7389 lines (+850 lines)
+- **Phase Progression**: Completed Phase 4.3 (Putting System) - ready for Phase 4.4
+- **Game Flow**: Enhanced green area handling with automatic putting mode transitions
+
+## [0.1.1] - 2025-10-24
+
+### Added
+- **Mortar Projectile Physics** (`shots.ts`): Complete projectile simulation system
+  - ActiveMortar tracking with unique IDs and comprehensive state management
+  - Realistic physics simulation with gravity (-9.81 m/s²) and air resistance (0.98 factor)
+  - 20 FPS projectile update loop for smooth trajectory calculation
+  - Spin effects implementation causing horizontal curve during flight
+  - Ground impact detection with precise collision detection
+  - Explosion VFX effects using SDK ArtilleryStrike system
+- **Shot Completion System**: Post-impact processing and distance tracking
+  - Shot landing position tracking and logging
+  - Distance calculation to hole using COURSE_HOLES data
+  - Framework for stroke counting and hole completion logic
+- **SDK Integration**: Full integration with BF6 Portal SDK
+  - Mortar projectile spawning with visual and trail effects
+  - Impact explosion VFX (FX_ArtilleryStrike_Explosion_GS)
+  - Mortar trail VFX (FX_Gadget_DeployableMortar_Projectile_Trail)
+  - Resolved mod.GetPlayerName API usage throughout codebase
+
+### Changed
+- **Build System**: Increased total output lines from 6372 to 6539 lines
+- **Type System**: Resolved all TypeScript compilation errors
+- **Phase Progression**: Completed Phase 4.2 (Shot Execution) - ready for Phase 4.3
+
+### Fixed
+- **TypeScript Compilation**: Resolved Vector3 vs Vector type conflicts
+- **Import Issues**: Fixed playerStates and COURSE_HOLES import problems
+- **Property Access**: Corrected HoleData property names (greenPosition vs pinPosition)
+- **API Usage**: Resolved mod.GetPlayerName function usage with declare global typing
+
+### Technical
+- **Physics Engine**: Implemented projectile motion equations with real-world constants
+- **Performance**: Optimized projectile updates with 50ms intervals (20 FPS)
+- **Memory Management**: Proper cleanup of active mortars on impact
+- **Error Handling**: Comprehensive logging for debugging and monitoring
+
 ## [0.1.0] - 2025-10-23
 
 ### Added

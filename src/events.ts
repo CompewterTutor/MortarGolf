@@ -24,6 +24,11 @@ import { initializeCourseObjects } from './courseobjects';
 import { initializeCourse } from './course';
 import { initializeHazardSystem, updateHazardSystem, cleanupHazardSystem } from './hazards';
 import { getCurrentHoleNumber } from './state';
+import { 
+    initializePuttingMode, 
+    isPlayerPutting,
+    updatePuttingTimers 
+} from './putting';
 
 ///////////////////////////////////////////////////////////////////////////////
 // EXPORTED EVENT HANDLERS
@@ -507,14 +512,14 @@ function handleGreenEntry(golfPlayer: GolfPlayer, holeNumber: number): void {
     // Set player to putting phase
     golfPlayer.holePhase = HolePhase.Putting;
     
+    // Initialize putting mode with dart-based mechanics
+    initializePuttingMode(golfPlayer);
+    
     // Show putting notification
     mod.DisplayNotificationMessage(
         mod.Message("greenEntry"),
         golfPlayer.player
     );
-    
-    // Enable putting UI/mode
-    // TODO: Implement putting mode setup
 }
 
 /**

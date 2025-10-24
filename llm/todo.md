@@ -1,9 +1,9 @@
 # MortarGolf Development Todo List
 
 **Project**: MortarGolf - Golf with Mortars Game Mode for BF6 Portal  
-**Version**: 0.1.0
-**Last Updated**: October 23, 2025
-**Status**: Phase 4.1 Complete ✅ - Beginning Phase 4.2
+**Version**: 0.1.2
+**Last Updated**: October 24, 2025
+**Status**: Phase 4.3 Complete ✅ - Beginning Phase 4.4
 
 ---
 
@@ -133,28 +133,28 @@
 - [x] Implement lie-based adjustments (fairway/rough/etc.)
 - [x] Add distance calculation display
 
-### 4.2 Shot Execution (Mortar System)
-- [ ] Implement 3-click shot meter system
-  - [ ] First click: Start backswing
-  - [ ] Second click: Determine power
-  - [ ] Third click: Determine hook/slice
-- [ ] Calculate shot trajectory based on inputs
-- [ ] Implement mortar projectile physics
+### 4.2 Shot Execution (Mortar System) ✅ COMPLETE
+- [x] Implement 3-click shot meter system
+  - [x] First click: Start backswing
+  - [x] Second click: Determine power
+  - [x] Third click: Determine hook/slice
+- [x] Calculate shot trajectory based on inputs
+- [x] Implement mortar projectile physics
 - [ ] Add wind effects to flight
-- [ ] Handle spin effects on trajectory
-- [ ] Create impact detection system
+- [x] Handle spin effects on trajectory
+- [x] Create impact detection system
 - [ ] Implement bounce/roll physics
-- [ ] Track shot landing position
+- [x] Track shot landing position
 
-### 4.3 Putting System
-- [ ] Create putting mode trigger on green
-- [ ] Implement dart-based putting mechanic
-- [ ] Create randomized target system
-- [ ] Define putting distance ranges
-- [ ] Implement "bullseye" detection
-- [ ] Handle putt success (hole completion)
-- [ ] Handle putt miss (next shot position)
-- [ ] Create putting UI and indicators
+### 4.3 Putting System ✅ COMPLETE
+- [x] Create putting mode trigger on green
+- [x] Implement dart-based putting mechanic
+- [x] Create randomized target system
+- [x] Define putting distance ranges
+- [x] Implement "bullseye" detection
+- [x] Handle putt success (hole completion)
+- [x] Handle putt miss (next shot position)
+- [x] Create putting UI and indicators
 
 ### 4.4 Shot Types & Clubs
 - [ ] Define club types (driver, iron, wedge, putter)
@@ -947,4 +947,4 @@
 - Test frequently at each milestone
 - Balance fun vs. realism
 
-**Last Updated**: October 23, 2025
+**Last Updated**: October 24, 2025

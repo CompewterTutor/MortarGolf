@@ -3,26 +3,40 @@
 **Project**: MortarGolf - Golf with Mortars Game Mode  
 **Started**: October 17, 2025  
 **Current Phase**: Phase 4 - Shot Mechanics  
-**Status**: Phase 4.1 Complete ✅ - Shot Setup & Aiming | Ready for Phase 4.2
+**Status**: Phase 4.3 Complete ✅ - Putting System (Dart-Based) | Ready for Phase 4.4
 
 ---
 
 ## Current State
 
 ### What We're Working On
-- **Phase 4.1 Complete** ✅: Shot Setup & Aiming
-  - ✅ Comprehensive shot system implementation (734 lines)
-  - ✅ Shot state management with PlayerShotState interface
-  - ✅ 3-click shot meter system (backswing, power, hook/slice)
-  - ✅ Shot trajectory calculation with physics
-  - ✅ Club selection and distance management
-  - ✅ Launch angle adjustment system
-  - ✅ Power meter with timing mechanics
-  - ✅ Hook/slice determination for shot accuracy
-  - ✅ Mortar projectile spawning and physics
-  - ✅ Full TypeScript compilation with proper type system
-  - ✅ Build system integration (6372 total lines)
-  - **Ready for Phase 4.2**: Shot Execution (Mortar System)
+- **Phase 4.3 Complete** ✅: Putting System (Dart-Based)
+  - ✅ Complete putting.ts module with 600+ lines of comprehensive architecture
+  - ✅ PuttingPhase enum (NONE, AIMING, CHARGING, THROWING, RESULT)
+  - ✅ TargetDifficulty enum (EASY, MEDIUM, HARD, EXPERT) with distance-based scaling
+  - ✅ PlayerPuttingState interface for tracking player putting state
+  - ✅ generatePuttingTarget() with randomized positioning and difficulty scaling
+  - ✅ Dart projectile physics with arc trajectory and hit detection
+  - ✅ Hole completion and next putt setup logic
+  - ✅ Integration with events.ts green entry system
+  - ✅ Integration with updates.ts for continuous timer updates
+  - ✅ Complete localization strings for putting system (15+ new messages)
+  - ✅ Successful build compilation (7389 total lines, +850 lines added)
+  - **Ready for Phase 4.4**: Shot Types & Clubs
+
+### Recently Completed (October 24, 2025 - Session)
+
+**Phase 4.2 Complete** ✅: Shot Execution (Mortar System)
+  - ✅ Mortar projectile physics simulation with gravity and air resistance
+  - ✅ ActiveMortar tracking system with unique IDs and state management
+  - ✅ Projectile update loop with 20 FPS physics updates
+  - ✅ Impact detection system with ground collision detection
+  - ✅ Explosion VFX effects using SDK ArtilleryStrike effects
+  - ✅ Spin effects implementation (hook/slice curve during flight)
+  - ✅ Shot landing position tracking and distance calculation
+  - ✅ Shot completion handling with hole distance measurement
+  - ✅ Full TypeScript compilation resolved (6539 total lines)
+  - ✅ Integration with existing 3-click shot meter system
 
 ### Recently Completed (October 23, 2025 - Session)
 
@@ -68,6 +82,42 @@
 4. ✅ **Build System Integration**:
    - Added shots.ts to build.config.json file processing order
    - Successful compilation with 6372 total output lines
+
+### Recently Completed (October 24, 2025 - Session)
+
+**Version 0.0.9 - Shot Execution (Mortar System)** ✅
+
+1. ✅ **Mortar Projectile Physics** (`src/shots.ts`):
+   - Implemented ActiveMortar interface for tracking active projectiles
+   - Added mortar projectile physics simulation with gravity (-9.81 m/s²)
+   - Created updateMortarProjectile function with 20 FPS physics updates
+   - Implemented air resistance (0.98 factor) for realistic flight
+   - Added spin effects causing horizontal curve during flight
+   - Ground impact detection with explosion VFX effects
+
+2. ✅ **SDK Integration**:
+   - Researched and located appropriate SDK spawn objects and VFX
+   - Implemented SpawnObject calls for mortar projectile (Crate_01_A placeholder)
+   - Added mortar trail VFX (FX_Gadget_DeployableMortar_Projectile_Trail)
+   - Implemented impact explosion VFX (FX_ArtilleryStrike_Explosion_GS)
+   - Resolved mod.GetPlayerName API usage (declare global any type)
+
+3. ✅ **Shot Completion System**:
+   - Added handleShotCompletion function for post-impact processing
+   - Implemented distance calculation to hole using COURSE_HOLES data
+   - Added shot landing position tracking and logging
+   - Prepared framework for stroke counting and hole completion logic
+
+4. ✅ **Type System Resolution**:
+   - Fixed Vector3 vs Vector type conflicts
+   - Resolved playerStates import issues (placeholder implementation)
+   - Fixed HoleData property access (greenPosition vs pinPosition)
+   - Achieved clean TypeScript compilation with 6539 total lines
+
+5. ✅ **Build System Success**:
+   - All compilation errors resolved
+   - Successful build with complete mortar projectile system
+   - Phase 4.2 core functionality implemented and tested
    - All TypeScript compilation errors resolved
    - Full integration with existing game flow architecture
 

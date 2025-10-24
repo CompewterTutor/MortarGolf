@@ -14,7 +14,7 @@ import { HoleData } from './types';
 // VERSION & DEBUG FLAGS
 ///////////////////////////////////////////////////////////////////////////////
 
-export const VERSION = [0, 1, 0]; // [major, minor, patch]
+export const VERSION = [0, 1, 2]; // [major, minor, patch]
 export const debugJSPlayer = true;
 export const debugMode = true; // DISABLE BEFORE SHARING
 

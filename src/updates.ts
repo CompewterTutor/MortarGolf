@@ -15,6 +15,7 @@ import * as stateMachine from './statemachine';
 import { MatchmakingQueue } from './matchmaking';
 import { Foursome } from './foursome';
 import { updateHazardSystem } from './hazards';
+import { updatePuttingTimers } from './putting';
 
 ///////////////////////////////////////////////////////////////////////////////
 // FAST UPDATE LOOP (60fps)
@@ -205,6 +206,9 @@ function updatePlayingTick(): void {
     
     // Update hazard system (fast updates for wind, destructibles, etc.)
     updateHazardSystem(state.currentHoleNumber);
+    
+    // Update putting system timers and mechanics
+    updatePuttingTimers(tickRate);
     
     GolfPlayer.getAllGolfers().forEach(golfPlayer => {
         if (!mod.IsPlayerValid(golfPlayer.player)) return;

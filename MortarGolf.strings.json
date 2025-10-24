@@ -55,5 +55,21 @@
     "teeBoxEntry": "Hole {} - Tee Box. Take your shot!",
     "greenEntry": "On the green! Switch to putting mode.",
     "roughEntry": "In the rough! Shot difficulty increased.",
-    "outOfBoundsEntry": "Out of Bounds! +1 stroke penalty."
+    "outOfBoundsEntry": "Out of Bounds! +1 stroke penalty.",
+    
+    "puttingModeStarted": "Putting Mode - Aim for the target!",
+    "puttSuccess": "Great putt! Hole complete!",
+    "puttMiss": "Missed the target. Try again.",
+    "puttTooClose": "Too close to the hole. Move back for better angle.",
+    "puttTimeout": "Putting time expired! +1 stroke.",
+    "targetHit": "Target hit! Distance to hole: {}",
+    "perfectPutt": "Perfect putt! Right in the cup!",
+    "goodPutt": "Good putt! Very close to the hole.",
+    "poorPutt": "Poor putt. Still have work to do.",
+    "puttingPower": "Power: {}%",
+    "puttingAccuracy": "Accuracy: {}%",
+    "puttingDistance": "Distance: {}m",
+    "puttingStrokes": "Putting strokes: {}",
+    "dartThrown": "Dart thrown! Aiming for target...",
+    "dartLanded": "Dart landed! Checking distance..."
 }
