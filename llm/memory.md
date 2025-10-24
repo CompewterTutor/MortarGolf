@@ -3,26 +3,31 @@
 **Project**: MortarGolf - Golf with Mortars Game Mode  
 **Started**: October 17, 2025  
 **Current Phase**: Phase 4 - Shot Mechanics  
-**Status**: Phase 4.3 Complete ✅ - Putting System (Dart-Based) | Ready for Phase 4.4
+**Status**: Phase 4.4 Complete ✅ - Shot Types & Clubs | Ready for Phase 5.1
 
 ---
 
 ## Current State
 
 ### What We're Working On
-- **Phase 4.3 Complete** ✅: Putting System (Dart-Based)
-  - ✅ Complete putting.ts module with 600+ lines of comprehensive architecture
-  - ✅ PuttingPhase enum (NONE, AIMING, CHARGING, THROWING, RESULT)
-  - ✅ TargetDifficulty enum (EASY, MEDIUM, HARD, EXPERT) with distance-based scaling
-  - ✅ PlayerPuttingState interface for tracking player putting state
-  - ✅ generatePuttingTarget() with randomized positioning and difficulty scaling
-  - ✅ Dart projectile physics with arc trajectory and hit detection
-  - ✅ Hole completion and next putt setup logic
-  - ✅ Integration with events.ts green entry system
-  - ✅ Integration with updates.ts for continuous timer updates
-  - ✅ Complete localization strings for putting system (15+ new messages)
-  - ✅ Successful build compilation (7389 total lines, +850 lines added)
-  - **Ready for Phase 4.4**: Shot Types & Clubs
+- **Phase 4.4 Complete** ✅: Shot Types & Clubs
+  - ✅ Complete club system with ClubType enum (Driver, Iron, Wedge, Putter)
+  - ✅ Club selection UI with updateClubUI() function and widget management
+  - ✅ Club-specific distance modifiers with getClubMaxDistance() function
+  - ✅ Club restrictions by lie type with getAllowedClubs() and validation
+  - ✅ Special shot types (Chip, Pitch, Flop) with ShotType enum and mechanics
+  - ✅ Comprehensive club upgrade system with Pro/Elite levels and shop integration
+  - ✅ ClubLevel enum (Standard, Pro, Elite) with upgrade bonuses
+  - ✅ PlayerClubUpgrades interface for tracking owned upgrades
+  - ✅ CLUB_UPGRADES array with 8 upgrade options (Pro/Elite for each club)
+  - ✅ purchaseClubUpgrade() function for buying upgrades from shop
+  - ✅ getUpgradedClubDistance(), getUpgradedClubAccuracy(), getUpgradedClubSpin() functions
+  - ✅ getShopClubUpgrades() for shop integration with dynamic availability
+  - ✅ Club upgrade strings added to localization (10+ new messages)
+  - ✅ clubUpgrades.ts added to build.config.json
+  - ✅ GolfPlayer class updated with clubUpgrades property
+  - ✅ Successful build compilation (7981 total lines, +592 lines added)
+  - **Ready for Phase 5.1**: Shop System Implementation
 
 ### Recently Completed (October 24, 2025 - Session)
 

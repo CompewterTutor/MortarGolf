@@ -71,5 +71,32 @@
     "puttingDistance": "Distance: {}m",
     "puttingStrokes": "Putting strokes: {}",
     "dartThrown": "Dart thrown! Aiming for target...",
-    "dartLanded": "Dart landed! Checking distance..."
+    "dartLanded": "Dart landed! Checking distance...",
+    
+    "clubSelected": "Club selected: {}",
+    "clubNotAllowed": "{} cannot be used from {}",
+    "driverClub": "Driver",
+    "ironClub": "Iron",
+    "wedgeClub": "Wedge",
+    "putterClub": "Putter",
+    
+    "shotTypeSelected": "Shot type: {}",
+    "shotTypeNotAllowed": "{} shot not available with current club/lie",
+    "normalShot": "Normal",
+    "chipShot": "Chip",
+    "pitchShot": "Pitch",
+    "flopShot": "Flop",
+    
+    "clubUpgradePurchased": "{} upgraded to {}!",
+    "clubUpgradeAlreadyOwned": "You already own this upgrade",
+    "clubUpgradeNotAvailable": "This upgrade is not available",
+    "clubUpgradeStandard": "Standard",
+    "clubUpgradePro": "Pro",
+    "clubUpgradeElite": "Elite",
+    "driverUpgrade": "Driver Upgrade",
+    "ironUpgrade": "Iron Upgrade", 
+    "wedgeUpgrade": "Wedge Upgrade",
+    "putterUpgrade": "Putter Upgrade",
+    "shopClubUpgrades": "Club Upgrades",
+    "upgradeDescription": "Upgrade your {} to {} level for improved performance"
 }

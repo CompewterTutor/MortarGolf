@@ -68,7 +68,8 @@ export enum ShopCategory {
     Armor,
     Gadgets,
     Buffs,
-    Carts
+    Carts,
+    Clubs
 }
 
 /**
@@ -79,6 +80,66 @@ export enum ClubType {
     Iron,      // Medium distance, medium arc
     Wedge,     // Short distance, high arc
     Putter     // On green, dart mechanic
+}
+
+/**
+ * Lie types for ball position
+ */
+export enum LieType {
+    Tee,       // Starting tee box
+    Fairway,   // Well-maintained grass
+    Rough,     // Long grass
+    Green,     // Putting surface
+    Sand,      // Sand trap/bunker
+    Water,     // Water hazard
+    OutOfBounds // Out of bounds
+}
+
+/**
+ * Special shot types for advanced gameplay
+ */
+export enum ShotType {
+    Normal,    // Regular shot with current club
+    Chip,      // Low running shot, typically with wedge
+    Pitch,     // Medium-high shot that rolls less
+    Flop       // Very high shot that stops quickly
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// CLUB UPGRADE SYSTEM
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Club upgrade levels
+ */
+export enum ClubLevel {
+    Standard,  // Basic club
+    Pro,       // Improved club
+    Elite      // Best club
+}
+
+/**
+ * Club upgrade data
+ */
+export interface ClubUpgrade {
+    club: ClubType;                   // Club type
+    level: ClubLevel;                 // Upgrade level
+    price: number;                    // Cost to purchase
+    distanceBonus: number;            // Distance multiplier (1.0 = no bonus)
+    accuracyBonus: number;            // Accuracy improvement
+    spinBonus: number;                // Spin control improvement
+    name: string;                     // Display name
+    description: string;              // Upgrade description
+}
+
+/**
+ * Player's owned club upgrades
+ */
+export interface PlayerClubUpgrades {
+    driverLevel: ClubLevel;
+    ironLevel: ClubLevel;
+    wedgeLevel: ClubLevel;
+    putterLevel: ClubLevel;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,7 +180,8 @@ export interface ShotData {
     launchAngle: number;              // Vertical angle (0-90)
     spin: number;                      // Hook/slice (-1.0 to 1.0)
     backspin: number;                 // Backspin amount (0.0 - 1.0)
-    club: ClubType;                   // Club used for the shot
+    club: ClubType;                   // Club used for shot
+    shotType: ShotType;               // Special shot type
 }
 
 /**
@@ -176,6 +238,9 @@ export interface GolfPlayer {
     holeScores: ScoreData[];          // Score for each hole
     stats: PlayerStats;               // Cumulative statistics
     money: number;                    // Current money balance
+    
+    // Club upgrades
+    clubUpgrades: PlayerClubUpgrades; // Owned club upgrade levels
     
     // UI Elements
     widgets: Widget[];                // UI widgets for cleanup

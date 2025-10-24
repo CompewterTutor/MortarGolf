@@ -3,7 +3,7 @@
 **Project**: MortarGolf - Golf with Mortars Game Mode for BF6 Portal  
 **Version**: 0.1.2
 **Last Updated**: October 24, 2025
-**Status**: Phase 4.3 Complete ✅ - Beginning Phase 4.4
+**Status**: Phase 4.4 Complete ✅ - Beginning Phase 5.1
 
 ---
 
@@ -156,13 +156,13 @@
 - [x] Handle putt miss (next shot position)
 - [x] Create putting UI and indicators
 
-### 4.4 Shot Types & Clubs
-- [ ] Define club types (driver, iron, wedge, putter)
-- [ ] Implement club selection UI
-- [ ] Create club-specific distance modifiers
-- [ ] Handle club restrictions by lie type
-- [ ] Implement special shot types (chip, pitch, flop)
-- [ ] Create club upgrade system (shop)
+### 4.4 Shot Types & Clubs ✅ COMPLETE
+- [x] Define club types (driver, iron, wedge, putter)
+- [x] Implement club selection UI
+- [x] Create club-specific distance modifiers
+- [x] Handle club restrictions by lie type
+- [x] Implement special shot types (chip, pitch, flop)
+- [x] Create club upgrade system (shop)
 
 ---
 

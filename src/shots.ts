@@ -7,7 +7,7 @@
  * the interface for players to take shots.
  */
 
-import { ShotData, ClubType, GolfPlayer, HolePhase, GameState, Player, Widget, Vector } from './types';
+import { ShotData, ClubType, ShotType, GolfPlayer, HolePhase, GameState, Player, Widget, Vector } from './types';
 import { 
     DRIVER_DISTANCE, 
     IRON_DISTANCE, 
@@ -60,6 +60,7 @@ export enum ShotMeterState {
  */
 export interface PlayerShotState {
     player: Player;
+    golfPlayer: GolfPlayer;
     currentPhase: ShotPhase;
     meterState: ShotMeterState;
     meterPosition: number;        // 0.0 - 1.0 position in meter
@@ -68,6 +69,7 @@ export interface PlayerShotState {
     
     // Shot inputs
     selectedClub: ClubType;
+    shotType: ShotType;           // Special shot type
     aimDirection: number;         // 0-360 degrees
     launchAngle: number;          // 0-90 degrees
     spin: number;                 // -1.0 to 1.0
@@ -80,6 +82,8 @@ export interface PlayerShotState {
     
     // UI elements
     shotWidgets: Widget[];    // Shot UI widgets for cleanup
+    clubWidget: Widget | null;    // Club selection widget
+    shotTypeWidget: Widget | null;    // Shot type selection widget
     
     // Results
     shotData: ShotData | null;    // Final shot data when executed
@@ -100,10 +104,12 @@ const playerShotStates = new Map<number, PlayerShotState>();
  */
 export function getPlayerShotState(player: Player): PlayerShotState {
     const playerId = mod.GetObjId(player);
+    const golfPlayer = GolfPlayerClass.get(player);
     
     if (!playerShotStates.has(playerId)) {
         const shotState: PlayerShotState = {
             player,
+            golfPlayer: golfPlayer!,
             currentPhase: ShotPhase.NONE,
             meterState: ShotMeterState.STOPPED,
             meterPosition: 0.0,
@@ -111,6 +117,7 @@ export function getPlayerShotState(player: Player): PlayerShotState {
             meterDirection: 1,
             
             selectedClub: ClubType.Driver,
+            shotType: ShotType.Normal,
             aimDirection: 0.0,
             launchAngle: 45.0,
             spin: 0.0,
@@ -121,6 +128,8 @@ export function getPlayerShotState(player: Player): PlayerShotState {
             timeRemaining: SHOT_TIMER_SECONDS,
             
             shotWidgets: [],
+            clubWidget: null,
+            shotTypeWidget: null,
             
             shotData: null,
             isShotValid: false
@@ -328,7 +337,8 @@ export function handleSecondClick(player: Player): boolean {
         launchAngle: shotState.launchAngle,
         spin: 0.0, // Will be determined by third click
         backspin: shotState.backspin,
-        club: shotState.selectedClub
+        club: shotState.selectedClub,
+        shotType: shotState.shotType
     };
     
     // Update UI
@@ -447,8 +457,14 @@ function calculateShotTrajectory(shotData: ShotData, player: Player): any {
     // Apply lie effects (rough, sand, etc.)
     distance *= getLieMultiplier(golfPlayer.currentLie);
     
-    // Calculate launch velocity
-    const launchAngleRad = shotData.launchAngle * (Math.PI / 180);
+    // Apply shot type modifiers
+    const shotModifiers = getShotTypeModifiers(shotData.shotType);
+    distance *= shotModifiers.distanceMultiplier;
+    
+    // Calculate launch angle with shot type bonus
+    const adjustedLaunchAngle = shotData.launchAngle + shotModifiers.launchAngleBonus;
+    const launchAngleRad = adjustedLaunchAngle * (Math.PI / 180);
+    
     const horizontalVelocity = distance * Math.cos(launchAngleRad);
     const verticalVelocity = distance * Math.sin(launchAngleRad);
     
@@ -476,7 +492,7 @@ function calculateShotTrajectory(shotData: ShotData, player: Player): any {
 /**
  * Get maximum distance for club type
  */
-function getClubMaxDistance(club: ClubType): number {
+export function getClubMaxDistance(club: ClubType): number {
     switch (club) {
         case ClubType.Driver: return DRIVER_DISTANCE;
         case ClubType.Iron: return IRON_DISTANCE;
@@ -500,6 +516,85 @@ function getLieMultiplier(lie: string): number {
     };
     
     return lieMultipliers[lie] || 1.0;
+}
+
+/**
+ * Get allowed clubs for a given lie type
+ */
+function getAllowedClubs(lie: string): ClubType[] {
+    const allowedClubs: { [key: string]: ClubType[] } = {
+        'tee': [ClubType.Driver, ClubType.Iron, ClubType.Wedge], // No putter on tee
+        'fairway': [ClubType.Driver, ClubType.Iron, ClubType.Wedge], // No putter on fairway
+        'rough': [ClubType.Iron, ClubType.Wedge], // Driver difficult from rough, no putter
+        'sand': [ClubType.Wedge], // Only wedge from sand (sand wedge)
+        'green': [ClubType.Putter], // Only putter on green
+        'water': [], // No clubs from water (penalty drop)
+        'outofbounds': [] // No clubs from OB (penalty drop)
+    };
+    
+    return allowedClubs[lie] || [ClubType.Driver, ClubType.Iron, ClubType.Wedge]; // Default to fairway clubs
+}
+
+/**
+ * Check if a club is allowed for a given lie type
+ */
+function isClubAllowedForLie(club: ClubType, lie: string): boolean {
+    const allowedClubs = getAllowedClubs(lie);
+    return allowedClubs.includes(club);
+}
+
+/**
+ * Get allowed shot types for a given club and lie combination
+ */
+function getAllowedShotTypes(club: ClubType, lie: string): ShotType[] {
+    const allowedTypes: ShotType[] = [ShotType.Normal]; // Normal shot always allowed
+    
+    // Chip shots: Only with wedge from fairway or rough
+    if (club === ClubType.Wedge && (lie === 'fairway' || lie === 'rough')) {
+        allowedTypes.push(ShotType.Chip);
+    }
+    
+    // Pitch shots: With iron or wedge from fairway or rough
+    if ((club === ClubType.Iron || club === ClubType.Wedge) && (lie === 'fairway' || lie === 'rough')) {
+        allowedTypes.push(ShotType.Pitch);
+    }
+    
+    // Flop shots: Only with wedge from rough (high risk, high reward)
+    if (club === ClubType.Wedge && lie === 'rough') {
+        allowedTypes.push(ShotType.Flop);
+    }
+    
+    return allowedTypes;
+}
+
+/**
+ * Get shot type modifier for distance and trajectory
+ */
+function getShotTypeModifiers(shotType: ShotType): { distanceMultiplier: number, launchAngleBonus: number, spinBonus: number } {
+    switch (shotType) {
+        case ShotType.Chip:
+            return { distanceMultiplier: 0.6, launchAngleBonus: -15, spinBonus: 0.2 }; // Lower, less distance, more backspin
+        case ShotType.Pitch:
+            return { distanceMultiplier: 0.8, launchAngleBonus: 10, spinBonus: 0.1 }; // Higher, moderate distance, some spin
+        case ShotType.Flop:
+            return { distanceMultiplier: 0.5, launchAngleBonus: 30, spinBonus: 0.3 }; // Very high, short distance, lots of spin
+        default:
+            return { distanceMultiplier: 1.0, launchAngleBonus: 0, spinBonus: 0 }; // Normal shot
+    }
+}
+
+/**
+ * Get shot type name for display
+ */
+function getShotTypeName(shotType: ShotType): string {
+    const shotNames = {
+        [ShotType.Normal]: MakeMessage('normalShot'),
+        [ShotType.Chip]: MakeMessage('chipShot'),
+        [ShotType.Pitch]: MakeMessage('pitchShot'),
+        [ShotType.Flop]: MakeMessage('flopShot')
+    };
+    
+    return shotNames[shotType] || 'Unknown';
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -812,6 +907,15 @@ export function changeClub(player: Player, club: ClubType): boolean {
         return false;
     }
     
+    // Check if club is allowed for current lie
+    if (!isClubAllowedForLie(club, shotState.golfPlayer.currentLie)) {
+        mod.DisplayNotificationMessage(
+            MakeMessage('clubNotAllowed', getClubName(club), shotState.golfPlayer.currentLie),
+            player
+        );
+        return false;
+    }
+    
     shotState.selectedClub = club;
     
     // Update UI to show new club
@@ -827,14 +931,48 @@ export function changeClub(player: Player, club: ClubType): boolean {
 }
 
 /**
+ * Change shot type for player
+ */
+export function changeShotType(player: Player, shotType: ShotType): boolean {
+    const shotState = getPlayerShotState(player);
+    
+    if (shotState.currentPhase !== ShotPhase.AIMING) {
+        return false;
+    }
+    
+    // Check if shot type is allowed for current club and lie
+    const allowedTypes = getAllowedShotTypes(shotState.selectedClub, shotState.golfPlayer.currentLie);
+    if (!allowedTypes.includes(shotType)) {
+        mod.DisplayNotificationMessage(
+            MakeMessage('shotTypeNotAllowed', getShotTypeName(shotType)),
+            player
+        );
+        return false;
+    }
+    
+    shotState.shotType = shotType;
+    
+    // Update UI to show new shot type
+    updateShotTypeUI(shotState);
+    
+    // Notify player
+    mod.DisplayNotificationMessage(
+        MakeMessage('shotTypeSelected', getShotTypeName(shotType)),
+        player
+    );
+    
+    return true;
+}
+
+/**
  * Get display name for club
  */
 function getClubName(club: ClubType): string {
     const clubNames = {
-        [ClubType.Driver]: 'Driver',
-        [ClubType.Iron]: 'Iron',
-        [ClubType.Wedge]: 'Wedge',
-        [ClubType.Putter]: 'Putter'
+        [ClubType.Driver]: MakeMessage('driverClub'),
+        [ClubType.Iron]: MakeMessage('ironClub'),
+        [ClubType.Wedge]: MakeMessage('wedgeClub'),
+        [ClubType.Putter]: MakeMessage('putterClub')
     };
     
     return clubNames[club] || 'Unknown';
@@ -844,7 +982,69 @@ function getClubName(club: ClubType): string {
  * Update club display in UI
  */
 function updateClubUI(shotState: PlayerShotState): void {
-    // TODO: Update club selection UI
+    const player = shotState.golfPlayer.player;
+    
+    // Create club selection widget if it doesn't exist
+    if (!shotState.clubWidget) {
+        shotState.clubWidget = mod.CreateUIWidget(player, {
+            type: 'selection',
+            title: 'Club Selection',
+            options: [
+                { text: 'Driver (250m)', value: ClubType.Driver },
+                { text: 'Iron (150m)', value: ClubType.Iron },
+                { text: 'Wedge (80m)', value: ClubType.Wedge },
+                { text: 'Putter (20m)', value: ClubType.Putter }
+            ],
+            selected: shotState.selectedClub,
+            callback: (club: ClubType) => {
+                changeClub(player, club);
+            }
+        });
+    } else {
+        // Update existing widget
+        mod.UpdateUIWidget(shotState.clubWidget, {
+            selected: shotState.selectedClub,
+            options: [
+                { text: 'Driver (250m)', value: ClubType.Driver },
+                { text: 'Iron (150m)', value: ClubType.Iron },
+                { text: 'Wedge (80m)', value: ClubType.Wedge },
+                { text: 'Putter (20m)', value: ClubType.Putter }
+            ]
+        });
+    }
+}
+
+/**
+ * Update shot type display in UI
+ */
+function updateShotTypeUI(shotState: PlayerShotState): void {
+    const player = shotState.golfPlayer.player;
+    const allowedTypes = getAllowedShotTypes(shotState.selectedClub, shotState.golfPlayer.currentLie);
+    
+    // Create shot type widget if it doesn't exist
+    if (!shotState.shotTypeWidget) {
+        shotState.shotTypeWidget = mod.CreateUIWidget(player, {
+            type: 'selection',
+            title: 'Shot Type',
+            options: allowedTypes.map(type => ({
+                text: getShotTypeName(type),
+                value: type
+            })),
+            selected: shotState.shotType,
+            callback: (shotType: ShotType) => {
+                changeShotType(player, shotType);
+            }
+        });
+    } else {
+        // Update existing widget
+        mod.UpdateUIWidget(shotState.shotTypeWidget, {
+            selected: shotState.shotType,
+            options: allowedTypes.map(type => ({
+                text: getShotTypeName(type),
+                value: type
+            }))
+        });
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -23,6 +23,7 @@
     "messages.ts",
     "gameflow.ts",
     "updates.ts",
+    "clubUpgrades.ts",
     "events.ts"
   ]
 }

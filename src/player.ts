@@ -8,7 +8,7 @@
 import { LobbyUI, MessageUI } from './ui';
 import { debugJSPlayer, totalHoles } from './constants';
 import { gameOver } from './state';
-import { GameState, HolePhase, PlayerRole, ScoreData, PlayerStats, ClubType, GolfPlayer as IGolfPlayer } from './types';
+import { GameState, HolePhase, PlayerRole, ScoreData, PlayerStats, ClubType, ClubLevel, GolfPlayer as IGolfPlayer } from './types';
 
 export class GolfPlayer implements IGolfPlayer {
     // Base player reference
@@ -60,6 +60,19 @@ export class GolfPlayer implements IGolfPlayer {
     
     // Selected club
     selectedClub: ClubType = ClubType.Driver;
+    
+    // Club upgrades
+    clubUpgrades: {
+        driverLevel: ClubLevel;
+        ironLevel: ClubLevel;
+        wedgeLevel: ClubLevel;
+        putterLevel: ClubLevel;
+    } = {
+        driverLevel: ClubLevel.Standard,
+        ironLevel: ClubLevel.Standard,
+        wedgeLevel: ClubLevel.Standard,
+        putterLevel: ClubLevel.Standard
+    };
     
     // Track all player instances
     static playerInstances: mod.Player[] = [];
@@ -310,7 +323,14 @@ export class GolfPlayer implements IGolfPlayer {
         if (lieType === 'green' && this.holePhase !== HolePhase.Putting) {
             this.holePhase = HolePhase.Putting;
             this.selectedClub = ClubType.Putter;
+        } else if (lieType !== 'green' && this.holePhase === HolePhase.Putting) {
+            // Switch back to normal play if leaving green
+            this.holePhase = HolePhase.Fairway;
+            this.selectedClub = ClubType.Iron; // Default to iron when leaving green
         }
+        
+        // Ensure selected club is valid for current lie
+        // This will be handled by the shots module when player tries to change clubs
     }
     
     /**
