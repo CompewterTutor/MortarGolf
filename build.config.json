@@ -13,6 +13,7 @@
     "course.ts",
     "courseobjects.ts",
     "hazards.ts",
+    "shots.ts",
     "helpers.ts",
     "ui.ts",
     "player.ts",

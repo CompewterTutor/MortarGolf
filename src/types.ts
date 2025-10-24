@@ -4,9 +4,10 @@
  * All custom types, interfaces, and enums used throughout the mod.
  */
 
-export type Widget = mod.UIWidget;
+export type Widget = any;
 export type Dict = { [key: string]: any };
-export type Vector = mod.Vector;
+export type Vector = any;
+export type Player = any;
 
 ///////////////////////////////////////////////////////////////////////////////
 // GAME STATE ENUMS
@@ -91,8 +92,8 @@ export interface HoleData {
     number: number;                    // Hole number (1-9 or 1-18)
     par: number;                       // Expected number of strokes
     distance: number;                  // Total distance from tee to pin (meters)
-    teePosition: mod.Vector;           // Starting position
-    greenPosition: mod.Vector;         // Pin/flag position
+    teePosition: Vector;           // Starting position
+    greenPosition: Vector;         // Pin/flag position
     greenRadius: number;               // Radius of putting green
     fairwayWidth: number;              // Width of fairway
     hazards: HazardData[];            // Obstacles on this hole
@@ -104,7 +105,7 @@ export interface HoleData {
  */
 export interface HazardData {
     type: string;                      // 'destructible', 'water', 'sand', 'rough', 'oob'
-    position: mod.Vector;              // Location
+    position: Vector;              // Location
     radius: number;                    // Area of effect
     penalty?: number;                  // Stroke penalty (if applicable)
 }
@@ -159,11 +160,11 @@ export interface PlayerStats {
  * Extends the base JsPlayer pattern with golf-specific properties
  */
 export interface GolfPlayer {
-    player: mod.Player;                // Base player reference
+    player: Player;                // Base player reference
     role: PlayerRole;                  // Golfer, Caddy, or Spectator
     teamId: number;                    // Team ID
-    caddyPlayer: mod.Player | null;    // Assigned caddy (if golfer)
-    golferPlayer: mod.Player | null;   // Assigned golfer (if caddy)
+    caddyPlayer: Player | null;    // Assigned caddy (if golfer)
+    golferPlayer: Player | null;   // Assigned golfer (if caddy)
     
     // Current state
     currentHole: number;               // Current hole number (1-9)
@@ -180,7 +181,7 @@ export interface GolfPlayer {
     widgets: Widget[];                // UI widgets for cleanup
     
     // Shot data
-    lastShotPosition: mod.Vector | null;  // Position of last shot
-    ballPosition: mod.Vector | null;      // Current ball position
+    lastShotPosition: Vector | null;  // Position of last shot
+    ballPosition: Vector | null;      // Current ball position
     distanceToPin: number;            // Distance remaining to hole
 }

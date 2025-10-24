@@ -1,9 +1,9 @@
 # MortarGolf Development Todo List
 
 **Project**: MortarGolf - Golf with Mortars Game Mode for BF6 Portal  
-**Version**: 0.0.8
+**Version**: 0.1.0
 **Last Updated**: October 23, 2025
-**Status**: Phase 3.1 Complete ✅ - Beginning Phase 3.2
+**Status**: Phase 4.1 Complete ✅ - Beginning Phase 4.2
 
 ---
 
@@ -97,39 +97,41 @@
 - [x] Add course validation and initialization
 - [x] Create helper functions for hole navigation and statistics
 
-### 3.2 Course Objects
-- [ ] Create tee box area triggers
-- [ ] Create green area triggers
-- [ ] Create fairway area triggers
-- [ ] Create rough area triggers
-- [ ] Create out-of-bounds triggers
-- [ ] Place pin/flag markers
-- [ ] Create distance markers (50m, 100m, 150m, etc.)
-- [ ] Add visual course elements (flags, markers)
+### 3.2 Course Objects ✅ COMPLETE
 
-### 3.3 Hazard System
-- [ ] Design obstacle randomization system
-- [ ] Create destructible obstacle types
-- [ ] Implement obstacle spawning logic
-- [ ] Create wind system (direction, intensity)
-- [ ] Implement environmental hazards
-- [ ] Add water hazards (if applicable)
-- [ ] Create sand traps/bunkers
-- [ ] Implement hazard penalty logic
+- [x] Create tee box area triggers
+- [x] Create green area triggers
+- [x] Create fairway area triggers
+- [x] Create rough area triggers
+- [x] Create out-of-bounds triggers
+- [x] Place pin/flag markers
+- [x] Create distance markers (50m, 100m, 150m, etc.)
+- [x] Add visual course elements (flags, markers)
+
+### 3.3 Hazard System ✅ COMPLETE
+
+- [x] Design obstacle randomization system
+- [x] Create destructible obstacle types
+- [x] Implement obstacle spawning logic
+- [x] Create wind system (direction, intensity)
+- [x] Implement environmental hazards
+- [x] Add water hazards (if applicable)
+- [x] Create sand traps/bunkers
+- [x] Implement hazard penalty logic
 
 ---
 
 ## Phase 4: Shot Mechanics
 
-### 4.1 Shot Setup & Aiming
-- [ ] Create shot setup state for player
-- [ ] Implement aiming UI (direction indicator)
-- [ ] Create power meter UI
-- [ ] Implement launch angle adjustment
-- [ ] Add spin control UI
-- [ ] Create wind indicator UI
-- [ ] Implement lie-based adjustments (fairway/rough/etc.)
-- [ ] Add distance calculation display
+### 4.1 Shot Setup & Aiming ✅ COMPLETE
+- [x] Create shot setup state for player
+- [x] Implement aiming UI (direction indicator)
+- [x] Create power meter UI
+- [x] Implement launch angle adjustment
+- [x] Add spin control UI
+- [x] Create wind indicator UI
+- [x] Implement lie-based adjustments (fairway/rough/etc.)
+- [x] Add distance calculation display
 
 ### 4.2 Shot Execution (Mortar System)
 - [ ] Implement 3-click shot meter system

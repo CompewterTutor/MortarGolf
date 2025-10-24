@@ -4,13 +4,17 @@
  * All game configuration constants, IDs, timings, colors, and vectors.
  */
 
+declare global {
+    const mod: any;
+}
+
 import { HoleData } from './types';
 
 ///////////////////////////////////////////////////////////////////////////////
 // VERSION & DEBUG FLAGS
 ///////////////////////////////////////////////////////////////////////////////
 
-export const VERSION = [0, 0, 8]; // [major, minor, patch]
+export const VERSION = [0, 1, 0]; // [major, minor, patch]
 export const debugJSPlayer = true;
 export const debugMode = true; // DISABLE BEFORE SHARING
 
@@ -239,6 +243,11 @@ export const IRON_DISTANCE: number = 150;
 export const WEDGE_DISTANCE: number = 80;
 export const PUTTER_DISTANCE: number = 20;
 
+// Launch angle settings (degrees)
+export const MIN_LAUNCH_ANGLE: number = 10;
+export const MAX_LAUNCH_ANGLE: number = 80;
+export const DEFAULT_LAUNCH_ANGLE: number = 45;
+
 // Lie effect multipliers
 export const TEE_MULTIPLIER: number = 1.1;     // 10% bonus on tee
 export const FAIRWAY_MULTIPLIER: number = 1.0; // Normal
@@ -286,6 +295,11 @@ export const TEE_TIME_COUNTDOWN_SECONDS: number = 30; // Time to reach tee box
 export const COMBAT_COUNTDOWN_SECONDS: number = 5;   // Countdown before playing starts
 export const ROUND_END_DISPLAY_SECONDS: number = 10; // Display scores after hole
 export const GAME_OVER_DELAY: number = 20;          // Delay at end of game
+
+// Shot system timing
+export const SHOT_TIMER_SECONDS: number = 30;       // Time to take shot
+export const SHOT_ANIMATION_SECONDS: number = 2.0;  // Shot animation duration
+export const SHOT_RESULT_DISPLAY_SECONDS: number = 3; // Show shot result
 
 export const REVIVE_TIME: number = 5;          // Seconds to revive
 export const RESPAWN_DELAY: number = 10;       // Respawn after caddy death
@@ -343,6 +357,6 @@ export const COLOR_UI_DANGER: number[] = [0.9, 0.2, 0.2];
 // VECTORS
 ///////////////////////////////////////////////////////////////////////////////
 
-export const ZEROVEC: mod.Vector = mod.CreateVector(0, 0, 0);
-export const ONEVEC: mod.Vector = mod.CreateVector(1, 1, 1);
-export const UPVEC: mod.Vector = mod.CreateVector(0, 0, 1);
+export const ZEROVEC: any = mod.CreateVector(0, 0, 0);
+export const ONEVEC: any = mod.CreateVector(1, 1, 1);
+export const UPVEC: any = mod.CreateVector(0, 0, 1);

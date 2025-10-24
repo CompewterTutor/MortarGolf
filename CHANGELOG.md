@@ -5,6 +5,39 @@ All notable changes to the MortarGolf project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0] - 2025-10-23
+
+### Added
+- **Shot System** (`shots.ts`): Complete shot mechanics system with 734 lines
+  - 3-click shot meter system (backswing, power, hook/slice)
+  - Shot state management with PlayerShotState interface
+  - Shot trajectory calculation with physics integration
+  - Club selection and distance management
+  - Launch angle adjustment system
+  - Power meter with timing mechanics
+  - Hook/slice determination for shot accuracy
+  - Mortar projectile spawning and physics
+- **Type System Enhancements**: Added Player, Widget, Vector type aliases
+- **Constants**: Added shot timing and launch angle constants
+- **Build System**: Integrated shots.ts into build configuration
+
+### Changed
+- Updated project status to Phase 4.1 Complete
+- Enhanced type system for better mod namespace handling
+- Improved TypeScript compilation with proper type declarations
+
+### Fixed
+- Resolved all TypeScript compilation errors in shots.ts
+- Fixed mod namespace usage throughout codebase
+- Corrected constant naming inconsistencies
+- Updated function signatures to use proper type aliases
+
+### Technical
+- Total codebase: 6372 lines (from 5651 lines)
+- Successful compilation with zero TypeScript errors
+- Full integration with existing game flow architecture
+- Comprehensive shot system ready for Phase 4.2 implementation
+
 ## [0.0.8] - 2025-10-23
 
 ### Added
